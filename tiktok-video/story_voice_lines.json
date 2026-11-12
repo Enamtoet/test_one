@@ -1,0 +1,72 @@
+[
+ {
+  "id": "v1",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Che caldo oggi! Tutto bene, ragazzo?",
+  "speed": 0.95
+ },
+ {
+  "id": "v2",
+  "lang": "it",
+  "voice": "nicola",
+  "text": "Sì, signora... sono caldo!",
+  "speed": 0.95
+ },
+ {
+  "id": "v3",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Ma che dici, ragazzo?!",
+  "speed": 0.95
+ },
+ {
+  "id": "v4",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Ho caldo.",
+  "speed": 0.85
+ },
+ {
+  "id": "r1",
+  "lang": "it",
+  "voice": "nicola",
+  "text": "Ho caldo.",
+  "speed": 0.85
+ },
+ {
+  "id": "r2",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Ho freddo.",
+  "speed": 0.85
+ },
+ {
+  "id": "r3",
+  "lang": "it",
+  "voice": "nicola",
+  "text": "Ho fame.",
+  "speed": 0.85
+ },
+ {
+  "id": "r4",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Ho sete!",
+  "speed": 0.9
+ },
+ {
+  "id": "v9",
+  "lang": "it",
+  "voice": "nicola",
+  "text": "Scusi, signora... ho caldo!",
+  "speed": 0.95
+ },
+ {
+  "id": "v10",
+  "lang": "it",
+  "voice": "sara",
+  "text": "Ecco! Bravo, ragazzo!",
+  "speed": 0.95
+ }
+]

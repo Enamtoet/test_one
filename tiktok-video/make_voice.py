@@ -9,7 +9,13 @@ V = {'ar':'vits-piper-ar_JO-kareem-medium/ar_JO-kareem-medium','it':'vits-piper-
      'dii':'vits-piper-ar_JO-SA_dii-high/ar_JO-SA_dii-high','miro':'vits-piper-ar_JO-SA_miro-high/ar_JO-SA_miro-high',
      'miro2':'vits-piper-ar_JO-SA_miro_V2-high/ar_JO-SA_miro_V2-high'}
 LANG = {'it':'it'}  # every other voice is Arabic
+KOKORO = {'sara': 35, 'nicola': 36}  # Italian speakers in kokoro-multi-lang-v1_0
 def mk_tts(lang):
+    if lang in KOKORO:
+        d=f"{M}/kokoro-multi-lang-v1_0"
+        return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
+            kokoro=sherpa_onnx.OfflineTtsKokoroModelConfig(model=d+'/model.onnx',voices=d+'/voices.bin',tokens=d+'/tokens.txt',
+                data_dir=d+'/espeak-ng-data',dict_dir=d+'/dict',lexicon=d+'/lexicon-us-en.txt',lang='it'),num_threads=4)))
     b=f"{M}/{V[lang]}"; d=b.rsplit('/',1)[0]
     return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
         vits=sherpa_onnx.OfflineTtsVitsModelConfig(model=b+'.onnx',tokens=d+'/tokens.txt',data_dir=d+'/espeak-ng-data'),num_threads=4)))
@@ -27,7 +33,7 @@ for it in json.load(open(f"{vo}/lines.json")):
     for k in range(N):
         v=it.get('voice',it['lang'])
         if v not in T: T[v]=mk_tts(v)
-        a=T[v].generate(it['text'],sid=0,speed=it.get('speed',1.0))
+        a=T[v].generate(it['text'],sid=KOKORO.get(v,0),speed=it.get('speed',1.0))
         x=np.array(a.samples,dtype='float32'); sr=a.sample_rate
         pad=np.concatenate([np.zeros(int(sr*.3),'float32'),x,np.zeros(int(sr*.5),'float32')])
         s=A[it['lang']].create_stream(); s.accept_waveform(sr,pad); A[it['lang']].decode_stream(s)

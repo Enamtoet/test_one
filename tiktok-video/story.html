@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Ahmed in Italy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --green:#00A651; --red:#E8333F; --cream:#FFF8EC; --ink:#121318; --gold:#FFC83D; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  body { font-family:'Cairo',sans-serif; color:var(--cream); position:relative; }
+  .it { font-family:'Poppins',sans-serif; direction:ltr; unicode-bidi:isolate; }
+
+  #bg { position:absolute; inset:0; background:radial-gradient(circle at 50% 30%, #2a2c38 0%, #121318 72%); }
+  .blob { position:absolute; width:900px; height:900px; border-radius:50%; filter:blur(150px); opacity:.33; }
+  #b1 { background:var(--green); left:-460px; top:180px; }
+  #b2 { background:var(--red); right:-460px; top:950px; }
+  #flag { position:absolute; top:0; left:0; right:0; height:22px; display:flex; direction:ltr; }
+  #flag div { flex:1; } #flag .g{background:var(--green)} #flag .w{background:#fff} #flag .r{background:var(--red)}
+  #prog { position:absolute; top:22px; left:0; height:10px; background:var(--gold); }
+  #flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+
+  .scene { position:absolute; inset:0; padding:130px 70px 330px; display:flex; flex-direction:column; opacity:0; }
+  .center { align-items:center; justify-content:center; text-align:center; }
+  [data-el] { opacity:0; }
+
+  /* hook */
+  #hook .h1 { font-weight:900; font-size:100px; line-height:1.3; }
+  #hook .h1 em { font-style:normal; color:var(--gold); }
+  #hook .h2 { font-weight:900; font-size:96px; line-height:1.3; margin-top:24px; color:#fff; }
+  #hook .h3 { font-weight:700; font-size:54px; margin-top:60px; color:rgba(255,248,236,.75); }
+  #hook .big { font-size:230px; line-height:1; margin-bottom:40px; }
+
+  /* chat */
+  .header { align-self:center; font-weight:800; font-size:50px; padding:16px 44px; border-radius:999px;
+            background:rgba(255,255,255,.09); border:3px solid rgba(255,255,255,.18); margin-bottom:56px; }
+  .row { display:flex; align-items:flex-end; gap:22px; margin-bottom:44px; }
+  .row.left { flex-direction:row-reverse; align-self:flex-end; }   /* RTL: flex-end = left side */
+  .row.right { align-self:flex-start; }
+  .avatar { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-size:76px; background:rgba(255,255,255,.12); flex:none; }
+  .who { font-weight:800; font-size:38px; opacity:.7; margin-bottom:8px; }
+  .row.left .who { text-align:left; }
+  .bubble { max-width:800px; padding:28px 40px 24px; border-radius:46px; transition:none; }
+  .row.left .bubble { background:#fff; color:#15161b; border-bottom-left-radius:12px; }
+  .row.right .bubble { background:#1f8f55; color:#fff; border-bottom-right-radius:12px; }
+  .bubble .it { font-weight:800; font-size:66px; line-height:1.25; display:block; }
+  .bubble .ar { font-weight:800; font-size:50px; line-height:1.4; margin-top:10px; display:block; }
+  .row.left .bubble .ar { color:#b5651d; }
+  .row.right .bubble .ar { color:var(--gold); }
+  .bubble.speaking { box-shadow:0 0 0 8px rgba(255,200,61,.75), 0 18px 60px rgba(0,0,0,.45); }
+  .react { align-self:center; font-size:110px; letter-spacing:10px; margin-top:20px; }
+
+  /* stop */
+  .stop { font-family:'Poppins'; font-weight:800; font-size:150px; color:#fff; background:var(--red);
+          padding:0 60px; border-radius:30px; transform:rotate(-4deg); }
+  .stop-ar { font-weight:900; font-size:70px; margin-top:26px; color:var(--red); }
+  .wrong { margin-top:70px; }
+  .wrong .it { font-weight:800; font-size:110px; text-decoration:line-through; text-decoration-color:var(--red);
+               text-decoration-thickness:12px; }
+  .wrong .ar { font-weight:800; font-size:56px; line-height:1.45; margin-top:18px; }
+  .lbl { margin-top:70px; font-weight:900; font-size:58px; color:var(--gold); }
+  .right-box { margin-top:22px; padding:30px 70px; border-radius:40px; background:rgba(0,166,81,.22);
+               border:5px solid var(--green); }
+  .right-box .it { font-weight:800; font-size:120px; line-height:1.15; }
+  .right-box .ar { font-weight:900; font-size:62px; margin-top:6px; }
+  .note { margin-top:40px; font-weight:700; font-size:46px; color:rgba(255,248,236,.8); }
+  .right-box.speaking { box-shadow:0 0 0 8px rgba(255,200,61,.75); }
+
+  /* rule */
+  .rule-title { font-weight:900; font-size:76px; line-height:1.35; text-align:center; margin-bottom:70px; }
+  .rule-title em { font-style:normal; color:var(--gold); }
+  .rrow { display:flex; align-items:center; justify-content:space-between; padding:30px 50px; margin-bottom:30px;
+          border-radius:36px; background:rgba(255,255,255,.08); border:4px solid rgba(255,255,255,.14); }
+  .rrow .it { font-weight:800; font-size:84px; }
+  .rrow .ar { font-weight:900; font-size:64px; color:var(--gold); }
+  .rrow.speaking { border-color:var(--gold); background:rgba(255,200,61,.16); }
+
+  /* cta */
+  .q1 { font-weight:900; font-size:80px; color:var(--gold); }
+  .q2 { font-weight:900; font-size:94px; line-height:1.35; margin-top:30px; }
+  .q3 { font-weight:800; font-size:64px; margin-top:40px; }
+  .teaser { margin-top:90px; padding:34px 50px; border-radius:36px; background:rgba(232,51,63,.2); border:4px dashed var(--red); }
+  .teaser b { display:block; font-weight:900; font-size:60px; }
+  .teaser span { display:block; font-weight:700; font-size:46px; margin-top:8px; opacity:.85; }
+</style>
+</head>
+<body>
+<div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div></div>
+<div id="flag"><div class="g"></div><div class="w"></div><div class="r"></div></div>
+<div id="prog"></div>
+
+<!-- 1. HOOK -->
+<div class="scene center" id="hook">
+  <div class="big" data-el="hk0">🚌😳</div>
+  <div class="h1" data-el="hk1">أحمد قال <em>جملة وحدة</em><br>فإيطاليا…</div>
+  <div class="h2" data-el="hk2">والطوبيس كامل<br>شاف فيه 💀</div>
+  <div class="h3" data-el="hk3">شوف حتى للخر 👀</div>
+</div>
+
+<!-- 2. STORY CHAT -->
+<div class="scene" id="chat" style="padding:90px 60px 200px">
+  <div class="header" data-el="ch0">☀️ روما · <span class="it">40°C</span> · 🚌 فالطوبيس</div>
+  <div class="row left" data-el="b1">
+    <div class="avatar">👵🏻</div>
+    <div><div class="who it">Signora Maria</div>
+      <div class="bubble" id="sb1"><span class="it">Che caldo oggi! Tutto bene, ragazzo?</span><span class="ar">شحال سخون اليوم! لاباس أ وليدي؟</span></div></div>
+  </div>
+  <div class="row right" data-el="b2">
+    <div class="avatar">👨🏽</div>
+    <div><div class="who">أحمد</div>
+      <div class="bubble" id="sb2"><span class="it">Sì, signora… sono caldo!</span><span class="ar">إيه أ لالة… أنا سخون!</span></div></div>
+  </div>
+  <div class="row left" data-el="b3">
+    <div class="avatar">👵🏻</div>
+    <div><div class="who it">Signora Maria</div>
+      <div class="bubble" id="sb3"><span class="it">Ma che dici, ragazzo?!</span><span class="ar">آش كتقول أ وليدي؟!</span></div></div>
+  </div>
+  <div class="react" data-el="rx">😳👀👀👀</div>
+</div>
+
+<!-- 3. STOP / EXPLAIN -->
+<div class="scene center" id="stop">
+  <div class="stop" data-el="st0">STOP ✋</div>
+  <div class="stop-ar" data-el="st1">أحمد دار غلطة كبيرة!</div>
+  <div class="wrong" data-el="st2">
+    <div class="it">Sono caldo</div>
+    <div class="ar">= أنا «سخون»… يعني متحمّس بزاف 🙈🔥<br>ماشي «فيا الحر»!</div>
+  </div>
+  <div class="lbl" data-el="st3">✅ الصحيح:</div>
+  <div class="right-box" data-el="st4" id="sbox">
+    <div class="it">Ho caldo</div>
+    <div class="ar">= فيا الحر 🥵</div>
+  </div>
+  <div class="note" data-el="st5">الـ <span class="it">h</span> ما كتنطقش ← «أو كالدو»</div>
+</div>
+
+<!-- 4. RULE -->
+<div class="scene" id="rule" style="justify-content:center">
+  <div class="rule-title" data-el="ru0">💡 القاعدة: الطاليان كيقولو<br><em>«عندي»</em> ماشي <em>«أنا»</em></div>
+  <div class="rrow" data-el="r1" id="sr1"><span class="it">Ho caldo</span><span class="ar">🥵 فيا الحر</span></div>
+  <div class="rrow" data-el="r2" id="sr2"><span class="it">Ho freddo</span><span class="ar">🥶 فيا البرد</span></div>
+  <div class="rrow" data-el="r3" id="sr3"><span class="it">Ho fame</span><span class="ar">🍕 أنا جيعان</span></div>
+  <div class="rrow" data-el="r4" id="sr4"><span class="it">Ho sete</span><span class="ar">💧 أنا عطشان</span></div>
+</div>
+
+<!-- 5. RETRY -->
+<div class="scene" id="retry" style="justify-content:center;padding-top:60px">
+  <div class="header" data-el="rt0">🔁 أحمد عاود جرّب…</div>
+  <div class="row right" data-el="b4">
+    <div class="avatar">👨🏽</div>
+    <div><div class="who">أحمد</div>
+      <div class="bubble" id="sb4"><span class="it">Scusi, signora… ho caldo!</span><span class="ar">سمحي ليا أ لالة… فيا الحر!</span></div></div>
+  </div>
+  <div class="row left" data-el="b5">
+    <div class="avatar">👵🏻</div>
+    <div><div class="who it">Signora Maria</div>
+      <div class="bubble" id="sb5"><span class="it">Ecco! Bravo, ragazzo!</span><span class="ar">هكا! برافو أ وليدي!</span></div></div>
+  </div>
+  <div class="react" data-el="ok">✅👏😄</div>
+</div>
+
+<!-- 6. CTA -->
+<div class="scene center" id="cta">
+  <div class="q1" data-el="q1">🧠 دابا نتا:</div>
+  <div class="q2" data-el="q2">كيفاش تقول<br>«أنا جيعان» بالطاليانية؟</div>
+  <div class="q3" data-el="q3">جاوب فالكومونتير 👇</div>
+  <div class="teaser" data-el="q4"><b>الجزء 2: الغلطة ديال أحمد فالقهوة ☕😂</b><span>تابعني باش ما يفوتكش</span></div>
+</div>
+
+<div id="flash"></div>
+
+<script>
+const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeBack = x => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+let TL = null;
+window.setTimeline = tl => { TL = tl; window.TOTAL = tl.total; };
+
+window.render = function (t) {
+  for (const [id, [s, e]] of Object.entries(TL.scenes)) {
+    const sc = document.getElementById(id);
+    if (t < s || t > e) { sc.style.opacity = 0; continue; }
+    const fin = clamp((t - s) / 0.2), fout = clamp((e - t) / 0.22);
+    sc.style.opacity = Math.min(fin, fout);
+    sc.style.transform = `translateY(${(1 - fout) * -50}px)`;
+  }
+  document.querySelectorAll('[data-el]').forEach(el => {
+    const t0 = TL.el[el.dataset.el];
+    const p = t0 === undefined ? 0 : clamp((t - t0) / 0.38);
+    el.style.opacity = clamp(p * 1.7);
+    const pop = el.classList.contains('row') || el.classList.contains('stop') || el.classList.contains('big')
+             || el.classList.contains('react') || el.classList.contains('right-box');
+    if (pop) {
+      const base = el.classList.contains('stop') ? ' rotate(-4deg)' : '';
+      el.style.transform = `scale(${0.5 + 0.5 * easeBack(p)})` + base;
+    } else el.style.transform = `translateY(${(1 - easeOut(p)) * 60}px)`;
+  });
+  // speaking highlight
+  document.querySelectorAll('.speaking').forEach(e => e.classList.remove('speaking'));
+  for (const [id, [a, b]] of Object.entries(TL.speak)) if (t >= a && t <= b) document.getElementById(id).classList.add('speaking');
+  // shake on the shocked reply
+  const [k0, k1] = TL.shake;
+  const chat = document.getElementById('chat');
+  if (t >= k0 && t <= k1) chat.style.transform += ` translateX(${Math.sin(t * 90) * 14 * (1 - (t - k0) / (k1 - k0))}px)`;
+  // white flash at STOP
+  const f = TL.flash; document.getElementById('flash').style.opacity = t >= f ? clamp(0.85 - (t - f) * 3.5) : 0;
+
+  document.getElementById('prog').style.width = (100 * t / TL.total) + '%';
+  document.getElementById('b1').style.transform = `translate(${Math.sin(t*.6)*120}px, ${Math.cos(t*.4)*160}px)`;
+  document.getElementById('b2').style.transform = `translate(${Math.cos(t*.5)*120}px, ${Math.sin(t*.45)*160}px)`;
+};
+</script>
+</body>
+</html>

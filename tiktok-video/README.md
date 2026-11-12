@@ -20,3 +20,13 @@
 2. `make_voice.py`: makes each line 8 times with offline voices and keeps the take Whisper understands best
 3. `build_voiceover.py`: times every card to its audio and mixes voice and sound effects
 4. `render_frames.js` + ffmpeg: renders `video.html` frame by frame with that timeline
+
+## Episode 2: "Ahmed in Italy: Sono caldo 😳" (`ahmed-sono-caldo.mp4`, 40 s)
+A story-format video: a chat on a hot bus in Rome, Ahmed's embarrassing mistake, STOP and explanation,
+the "Ho + noun" rule (caldo/freddo/fame/sete), a retry, then a comment question and a Part 2 teaser.
+Italian voices: Kokoro `if_sara` (Signora Maria) and `im_nicola` (Ahmed). Subtitles: Italian + Moroccan Darija.
+Build: `make_voice.py` with `story_voice_lines.json` → `build_story.py` → `render_frames.js story.html` → ffmpeg.
+
+Caption:
+أحمد قال جملة وحدة فإيطاليا… والطوبيس كامل شاف فيه 😳🚌 واش نتا كنتي غادي تقولها؟ 👇
+#تعلم_الإيطالية #ايطاليا #مغاربة_ايطاليا #عرب_ايطاليا #italiano #imparareitaliano #fyp
