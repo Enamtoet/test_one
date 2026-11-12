@@ -94,10 +94,23 @@ const PHRASES = [
   { e:'🚻', it:'Dov\'è il bagno?', p:'دوڤيه إيل بانيو', ar:'أين الحمام؟',         tip:'<b>gn</b> تُنطق مثل «نْي»' },
 ];
 
-// timeline (seconds)
-const HOOK = 3.2, CARD = 4.0, QUIZ = 5.0;
-const TOTAL = HOOK + PHRASES.length * CARD + QUIZ;
-window.TOTAL = TOTAL;
+// Timeline (seconds). Default = silent version; setTimeline() overrides it
+// with timings measured from the voice-over audio (see build_voiceover.py).
+const DEFAULT_DELAY = { a0:0.0, a1:0.05, a2:0.55, a3:1.05, a4:1.6 };
+let TL;
+window.setTimeline = function (tl) {
+  TL = tl;
+  window.TOTAL = tl.total;
+};
+(function () {
+  const HOOK = 3.2, CARD = 4.0, QUIZ = 5.0;
+  setTimeline({
+    hook: { start: 0, dur: HOOK, delay: DEFAULT_DELAY },
+    cards: PHRASES.map((_, i) => ({ start: HOOK + i*CARD, dur: CARD, delay: DEFAULT_DELAY, speak: [] })),
+    quiz: { start: HOOK + PHRASES.length*CARD, dur: QUIZ + 1, delay: { a1:0, a2:0.4, a3:0.8, a4:1.6 }, reveal: 3.6 },
+    total: HOOK + PHRASES.length*CARD + QUIZ,
+  });
+})();
 
 const cards = document.getElementById('cards');
 PHRASES.forEach((ph, i) => {
@@ -117,10 +130,7 @@ const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
 const easeOut = x => 1 - Math.pow(1 - x, 3);
 const easeBack = x => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
 
-// stagger delays for .a0..a4 classes
-const DELAY = { a0:0.0, a1:0.05, a2:0.55, a3:1.05, a4:1.6 };
-
-function animScene(scene, local, dur) {
+function animScene(scene, local, dur, DELAY) {
   if (local < 0 || local > dur) { scene.style.opacity = 0; return; }
   const out = clamp((dur - local) / 0.28);           // exit fade
   scene.style.opacity = out;
@@ -141,16 +151,24 @@ function animScene(scene, local, dur) {
 }
 
 window.render = function (t) {
-  animScene(document.getElementById('hook'), t, HOOK);
-  document.querySelectorAll('.card').forEach((c, i) => animScene(c, t - HOOK - i*CARD, CARD));
-  const qt = t - HOOK - PHRASES.length*CARD;
-  animScene(document.getElementById('quiz'), qt, QUIZ + 1);
-  // highlight right answer near the end of quiz
+  animScene(document.getElementById('hook'), t - TL.hook.start, TL.hook.dur, TL.hook.delay);
+  document.querySelectorAll('.card').forEach((c, i) => {
+    const C = TL.cards[i], local = t - C.start;
+    animScene(c, local, C.dur, C.delay);
+    // pulse the pronunciation pill while the Italian word is being spoken
+    const pill = c.querySelector('.pron');
+    const on = C.speak.some(([a, b]) => local >= a && local <= b);
+    pill.style.background = on ? 'rgba(0,166,81,.45)' : '';
+    pill.style.borderColor = on ? 'var(--green)' : '';
+  });
+  const qt = t - TL.quiz.start;
+  animScene(document.getElementById('quiz'), qt, TL.quiz.dur, TL.quiz.delay);
+  // highlight right answer
   const ok = document.querySelectorAll('#quiz .opt')[1];
-  if (qt > 3.6) { ok.style.background = 'rgba(0,166,81,.35)'; ok.style.borderColor = 'var(--green)'; }
+  if (qt > TL.quiz.reveal) { ok.style.background = 'rgba(0,166,81,.35)'; ok.style.borderColor = 'var(--green)'; }
   else { ok.style.background = ''; ok.style.borderColor = ''; }
 
-  document.getElementById('prog').style.width = (100 * t / TOTAL) + '%';
+  document.getElementById('prog').style.width = (100 * t / TL.total) + '%';
   document.getElementById('b1').style.transform = `translate(${Math.sin(t*0.6)*120}px, ${Math.cos(t*0.4)*160}px)`;
   document.getElementById('b2').style.transform = `translate(${Math.cos(t*0.5)*120}px, ${Math.sin(t*0.45)*160}px)`;
 };

@@ -1,0 +1,22 @@
+[
+ {"id":"hook","lang":"ar","text":"ثَمانِي كَلِماتٍ إيطالِيَّة، سَتَحْتاجُها كُلَّ يَوْم. اِحْفَظْها مَعِي!"},
+ {"id":"c1_it","lang":"it","text":"Ciao!","speed":0.85},
+ {"id":"c1_ar","lang":"ar","text":"مَرْحَباً، أَوْ مَعَ السَّلامَة."},
+ {"id":"c2_it","lang":"it","text":"Buongiorno!","speed":0.85},
+ {"id":"c2_ar","lang":"ar","text":"صَباحُ الخَيْر."},
+ {"id":"c3_it","lang":"it","text":"Grazie!","speed":0.85},
+ {"id":"c3_ar","lang":"ar","text":"شُكْراً."},
+ {"id":"c4_it","lang":"it","text":"Per favore.","speed":0.85},
+ {"id":"c4_ar","lang":"ar","text":"مِنْ فَضْلِك."},
+ {"id":"c5_it","lang":"it","text":"Scusi!","speed":0.85},
+ {"id":"c5_ar","lang":"ar","text":"لَوْ سَمَحْت."},
+ {"id":"c6_it","lang":"it","text":"Quanto costa?","speed":0.85},
+ {"id":"c6_ar","lang":"ar","text":"بِكَمْ هَذا؟"},
+ {"id":"c7_it","lang":"it","text":"Non capisco.","speed":0.85},
+ {"id":"c7_ar","lang":"ar","text":"لا أَفْهَم."},
+ {"id":"c8_it","lang":"it","text":"Dov'è il bagno?","speed":0.85},
+ {"id":"c8_ar","lang":"ar","text":"أَيْنَ الحَمَّام؟"},
+ {"id":"quiz","lang":"ar","text":"اِخْتَبِرْ نَفْسَك! كَيْفَ تَقولُ شُكْراً بِالإيطالِيَّة؟"},
+ {"id":"answer_it","lang":"it","text":"Grazie!","speed":0.9},
+ {"id":"outro","lang":"ar","text":"اُكْتُبْ جَوابَكَ في التَّعْليقات، وَتابِعْني!"}
+]
