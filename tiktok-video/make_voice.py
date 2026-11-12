@@ -26,6 +26,7 @@ def mk_asr(lang):
 T={}; A={l:mk_asr(l) for l in ('ar','it')}
 def norm(s):
     s=''.join(c for c in unicodedata.normalize('NFKD',s) if not unicodedata.combining(c))
+    s=s.replace("33","trentatre")
     s=s.replace('أ','ا').replace('إ','ا').replace('ة','ه').replace('ى','ي').lower()
     return re.sub(r"[^\w]","",s)
 for it in json.load(open(f"{vo}/lines.json")):

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>Italiano facile</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:#000; }
+  body { position:relative; font-family:'Cairo',sans-serif; }
+  #header { position:absolute; top:395px; left:0; right:0; text-align:center; color:#fff; font-weight:800; font-size:54px; direction:rtl; }
+  #panel { position:absolute; left:0; top:480px; width:1080px; height:960px; background:#fff; overflow:hidden; }
+  #art { position:absolute; inset:0; }
+  .cap { position:absolute; left:40px; right:40px; text-align:center; color:#111; opacity:0; }
+  .cap.top { top:34px; }
+  .cap.bottom { bottom:34px; }
+  .cap .ar { font-family:'Cairo'; font-weight:900; font-size:66px; direction:rtl; line-height:1.3; }
+  .cap .it { font-family:'Poppins'; font-weight:800; font-size:78px; direction:ltr; line-height:1.2; }
+  .cap.bottom .it { font-size:58px; }
+  .cap .sub { font-family:'Cairo'; font-weight:700; font-size:42px; color:#666; direction:rtl; margin-top:4px; }
+  #shade { position:absolute; inset:0; background:rgba(10,10,12,.78); opacity:0; }
+  .cap.outro { top:330px; color:#fff; }
+  .cap.outro .ar { font-size:84px; }
+  .cap.outro .sub { color:#ddd; font-size:54px; margin-top:20px; }
+</style>
+</head>
+<body>
+<div id="header">الإيطالية مختلفة 😏😂</div>
+<div id="panel">
+  <svg id="art" viewBox="0 0 1080 960" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div id="shade"></div>
+  <div id="caps"></div>
+</div>
+<script>
+let TL;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const INK = '#26262e', SKIN = '#EED9BF', SW = 6;
+
+// ---------------- face (shared)
+function face(cx, cy, s, st) {
+  // st: {lid, px, py, brow, mouth, tilt}
+  const ex = 40 * s, ey = -6 * s, er = 27 * s;
+  let g = '';
+  // ears + side hair
+  g += `<circle cx="${cx - 100*s}" cy="${cy + 5*s}" r="${18*s}" fill="${SKIN}" stroke="${INK}" stroke-width="${SW}"/>
+        <circle cx="${cx + 100*s}" cy="${cy + 5*s}" r="${18*s}" fill="${SKIN}" stroke="${INK}" stroke-width="${SW}"/>`;
+  g += `<circle cx="${cx}" cy="${cy}" r="${104*s}" fill="${SKIN}" stroke="${INK}" stroke-width="${SW}"/>`;
+  for (const side of [-1, 1]) for (let k = 0; k < 4; k++)
+    g += `<circle cx="${cx + side * (88 - k * 3) * s}" cy="${cy - (30 - k * 14) * s}" r="${13*s}" fill="#9a9aa2"/>`;
+  g += `<path d="M${cx - 40*s} ${cy - 78*s} q${30*s} ${-18*s} ${62*s} ${-10*s}" fill="none" stroke="#fff" stroke-width="${7*s}" stroke-linecap="round" opacity=".8"/>`;
+  // eyes with lids (clipPath per eye)
+  for (const side of [-1, 1]) {
+    const x = cx + side * ex, y = cy + ey, id = 'e' + side + Math.round(cx);
+    g += `<defs><clipPath id="${id}"><ellipse cx="${x}" cy="${y}" rx="${er}" ry="${er * .9}"/></clipPath></defs>
+      <ellipse cx="${x}" cy="${y}" rx="${er}" ry="${er * .9}" fill="#fff"/>
+      <circle cx="${x + st.px * s}" cy="${y + st.py * s + 4 * s}" r="${9*s}" fill="${INK}" clip-path="url(#${id})"/>
+      <rect x="${x - er}" y="${y - er}" width="${er * 2}" height="${er * 1.8 * st.lid + 0.1}" fill="${SKIN}" clip-path="url(#${id})"/>
+      <line x1="${x - er * .95}" y1="${y - er * .9 + er * 1.8 * st.lid}" x2="${x + er * .95}" y2="${y - er * .9 + er * 1.8 * st.lid}" stroke="${INK}" stroke-width="${4*s}" clip-path="url(#${id})"/>
+      <ellipse cx="${x}" cy="${y}" rx="${er}" ry="${er * .9}" fill="none" stroke="${INK}" stroke-width="${5*s}"/>`;
+    // round glasses rims
+    g += `<circle cx="${x}" cy="${y}" r="${er + 9*s}" fill="none" stroke="${INK}" stroke-width="${4*s}" opacity=".9"/>`;
+    // brow
+    const by = y - er - 22 * s - st.brow * 16 * s;
+    g += `<line x1="${x - 22*s}" y1="${by + side * 2 * s}" x2="${x + 22*s}" y2="${by - side * 2 * s}" stroke="${INK}" stroke-width="${7*s}" stroke-linecap="round"/>`;
+  }
+  g += `<line x1="${cx - 4*s}" y1="${cy - 6*s}" x2="${cx + 4*s}" y2="${cy - 6*s}" stroke="${INK}" stroke-width="${4*s}"/>`;
+  // nose
+  g += `<path d="M${cx} ${cy + 12*s} q${12*s} ${16*s} ${-2*s} ${24*s}" fill="none" stroke="${INK}" stroke-width="${5*s}" stroke-linecap="round"/>`;
+  // mouth
+  const m = st.mouth, my = cy + 66 * s;
+  if (m > 0.06) g += `<ellipse cx="${cx}" cy="${my + 4*s}" rx="${(16 + 8 * m) * s}" ry="${(3 + 20 * m) * s}" fill="#6b2323" stroke="${INK}" stroke-width="${4*s}"/>`;
+  else g += `<line x1="${cx - 18*s}" y1="${my}" x2="${cx + 18*s}" y2="${my}" stroke="${INK}" stroke-width="${5*s}" stroke-linecap="round"/>`;
+  // moustache (on top of mouth)
+  g += `<path d="M${cx} ${cy + 44*s} q${-22*s} ${-14*s} ${-46*s} ${-2*s} q${-16*s} ${10*s} ${-28*s} ${2*s} q${8*s} ${22*s} ${34*s} ${16*s} q${22*s} ${-4*s} ${40*s} ${-12*s}
+          q${18*s} ${8*s} ${40*s} ${12*s} q${26*s} ${6*s} ${34*s} ${-16*s} q${-12*s} ${8*s} ${-28*s} ${-2*s} q${-24*s} ${-12*s} ${-46*s} ${2*s} z" fill="#4a3426"/>`;
+  return `<g transform="rotate(${st.tilt} ${cx} ${cy + 100 * s})">${g}</g>`;
+}
+
+// ---------------- scene 1: professor in armchair
+function armchairScene(st) {
+  let g = '';
+  g += `<ellipse cx="540" cy="905" rx="330" ry="22" fill="#e6e6ea"/>`;
+  g += `<rect x="330" y="360" width="420" height="420" rx="60" fill="#5f5f6e" stroke="${INK}" stroke-width="${SW}"/>
+        <rect x="370" y="400" width="340" height="300" rx="40" fill="#686878"/>`;
+  // body (sweater) + bow tie
+  g += `<path d="M452 472 C440 428 640 428 628 472 C668 560 676 690 622 714 C580 734 500 734 458 714 C404 690 412 560 452 472 Z" fill="#2f5a4c" stroke="${INK}" stroke-width="${SW}"/>
+        <path d="M540 450 l-34 -18 v36 z M540 450 l34 -18 v36 z" fill="#d63a3a" stroke="${INK}" stroke-width="4"/><circle cx="540" cy="450" r="8" fill="#b92d2d"/>`;
+  // seat cushion + legs
+  g += `<rect x="300" y="680" width="480" height="110" rx="40" fill="#717182" stroke="${INK}" stroke-width="${SW}"/>`;
+  g += `<path d="M495 760 L488 890" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M585 760 L592 890" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+        <ellipse cx="478" cy="896" rx="26" ry="11" fill="${INK}"/><ellipse cx="604" cy="896" rx="26" ry="11" fill="${INK}"/>`;
+  // chair arms + base + wooden legs
+  g += `<rect x="250" y="560" width="125" height="270" rx="55" fill="#55556a" stroke="${INK}" stroke-width="${SW}"/>
+        <rect x="705" y="560" width="125" height="270" rx="55" fill="#55556a" stroke="${INK}" stroke-width="${SW}"/>
+        <rect x="280" y="800" width="520" height="56" rx="22" fill="#55556a" stroke="${INK}" stroke-width="${SW}"/>
+        <rect x="300" y="852" width="22" height="48" rx="6" fill="#9b8a72"/><rect x="758" y="852" width="22" height="48" rx="6" fill="#9b8a72"/>`;
+  // arms: left rests on chair arm, right gestures
+  g += `<path d="M455 488 Q392 560 352 610 Q338 628 360 640" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const a = st.gesture;   // 0..1
+  const hx = 728 + 40 * a, hy = 620 - 120 * a + Math.sin(st.t * 7) * 18 * a;
+  g += `<path d="M625 488 Q700 560 ${700 + 10 * a} ${600 - 40 * a} L ${hx} ${hy}" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if (a > 0.3) g += `<path d="M${hx} ${hy} l18 -14 M${hx} ${hy} l22 2 M${hx} ${hy} l14 14" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`;
+  g += face(540, 300 + st.bob, 1, st);
+  return g;
+}
+
+// ---------------- scene 2: mic + dancing friend
+function micScene(st, t) {
+  const bt = (t - TL.beat0) / TL.beat, ph = bt * Math.PI;
+  const bob = -Math.abs(Math.sin(ph)) * 16;
+  let g = `<ellipse cx="540" cy="905" rx="420" ry="22" fill="#e6e6ea"/>`;
+  // mic stand
+  g += `<line x1="520" y1="900" x2="520" y2="560" stroke="${INK}" stroke-width="8"/><ellipse cx="520" cy="900" rx="60" ry="12" fill="${INK}"/>
+        <g transform="rotate(-25 520 545)"><rect x="502" y="490" width="36" height="70" rx="18" fill="#bfbfc8" stroke="${INK}" stroke-width="5"/>
+        <line x1="506" y1="510" x2="534" y2="510" stroke="${INK}" stroke-width="3"/><line x1="506" y1="525" x2="534" y2="525" stroke="${INK}" stroke-width="3"/></g>`;
+  // professor standing (left)
+  const px = 360, sway = Math.sin(ph / 2) * 6;
+  g += `<g transform="translate(${sway},${bob * 0.6})">
+     <path d="M302 522 C290 486 430 486 418 522 C448 600 452 700 412 724 C382 740 338 740 308 724 C268 700 272 600 302 522 Z" fill="#2f5a4c" stroke="${INK}" stroke-width="${SW}"/>
+     <path d="M360 505 l-26 -14 v28 z M360 505 l26 -14 v28 z" fill="#d63a3a" stroke="${INK}" stroke-width="4"/>
+     <path d="M330 730 L322 890 M390 730 L398 890" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <ellipse cx="312" cy="896" rx="24" ry="10" fill="${INK}"/><ellipse cx="408" cy="896" rx="24" ry="10" fill="${INK}"/>
+     <path d="M300 540 Q250 620 ${262 + Math.sin(ph) * 16} ${680}" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <path d="M420 540 Q470 590 498 556" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     ${face(px, 380, 0.82, { ...st, tilt: Math.sin(ph) * 5 })}</g>`;
+  // friend dancing (right): beanie, hoodie
+  const fx = 790, sq = Math.abs(Math.sin(ph)), arm = Math.sin(ph);
+  const fy = 20 * sq;
+  g += `<g transform="translate(${Math.sin(ph / 2) * 22},${fy})">
+     <path d="M732 562 C722 528 858 528 848 562 C876 630 882 700 842 724 C812 740 768 740 738 724 C698 700 704 630 732 562 Z" fill="#3d63b8" stroke="${INK}" stroke-width="${SW}"/>
+     <path d="M760 730 Q ${740 - 20 * sq} 800 750 ${880 - fy} M820 730 Q ${840 + 20 * sq} 800 830 ${880 - fy}" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <ellipse cx="744" cy="${886 - fy}" rx="24" ry="10" fill="${INK}"/><ellipse cx="836" cy="${886 - fy}" rx="24" ry="10" fill="${INK}"/>
+     <path d="M735 575 Q ${690} ${560 - 60 * arm} ${680 + 10 * arm} ${520 - 90 * arm}" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <path d="M845 575 Q ${890} ${560 + 60 * arm} ${900 - 10 * arm} ${520 + 90 * arm}" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+     <circle cx="790" cy="450" r="78" fill="${SKIN}" stroke="${INK}" stroke-width="${SW}"/>
+     <path d="M712 440 Q715 360 790 358 Q865 360 868 440 Z" fill="#f08a24" stroke="${INK}" stroke-width="${SW}"/>
+     <rect x="706" y="428" width="168" height="26" rx="12" fill="#d9731a" stroke="${INK}" stroke-width="5"/>
+     <circle cx="790" cy="352" r="16" fill="#f08a24" stroke="${INK}" stroke-width="5"/>
+     <path d="M760 480 q8 -10 16 0 M806 480 q8 -10 16 0" fill="none" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>
+     <path d="M768 506 q22 22 44 0" fill="#6b2323" stroke="${INK}" stroke-width="5"/></g>`;
+  // music notes floating
+  for (let i = 0; i < 3; i++) {
+    const p = ((bt / 2 + i / 3) % 1), x = 560 + i * 40 + Math.sin((bt + i) * 2) * 15, y = 470 - p * 160;
+    g += `<text x="${x}" y="${y}" font-size="54" fill="${INK}" opacity="${(1 - p) * .85}" font-family="Poppins">♪</text>`;
+  }
+  return g;
+}
+
+window.setTimeline = tl => {
+  TL = tl; window.TOTAL = tl.total;
+  document.getElementById('caps').innerHTML = tl.caps.map((c, i) =>
+    `<div class="cap ${c.pos}" id="cap${i}"><div class="${c.kind}">${c.text}</div>${c.sub ? `<div class="sub">${c.sub}</div>` : ''}</div>`).join('');
+};
+
+function stateAt(t) {
+  const st = { lid: .45, px: 0, py: 0, brow: 0, mouth: 0, tilt: Math.sin(t * .8) * 2, gesture: 0, bob: 0, t };
+  const f = Math.floor(t * 30); st.mouth = TL.mouth[f] || 0;
+  const bp = (t % 3.7); if (bp < 0.12) st.lid = 1;                     // blink
+  for (const e of TL.ev) {
+    if (t < e.t || t > e.t + e.d) continue;
+    const k = clamp((t - e.t) / 0.15) * clamp((e.t + e.d - t) / 0.15);
+    if (e.e === 'closed') st.lid = .45 + .55 * k;
+    if (e.e === 'sideeye') { st.px = 12 * k; st.lid = .45 + .15 * k; st.tilt += 4 * k; }
+    if (e.e === 'eyebrow') { st.brow = k; st.lid = .45 - .25 * k; }
+    if (e.e === 'talk_gesture') st.gesture = k;
+  }
+  if (st.mouth > .1) st.bob = -st.mouth * 4;
+  return st;
+}
+
+window.render = function (t) {
+  const st = stateAt(t);
+  document.getElementById('art').innerHTML = t < TL.part2 ? armchairScene(st) : micScene(st, t);
+  TL.caps.forEach((c, i) => {
+    const el = document.getElementById('cap' + i);
+    const on = t >= c.t0 && t < c.t1;
+    el.style.opacity = on ? 1 : 0;
+    const p = clamp((t - c.t0) / 0.12);
+    el.style.transform = on ? `scale(${0.92 + 0.08 * p})` : '';
+  });
+  document.getElementById('shade').style.opacity = clamp((t - TL.outro) / 0.4) ;
+};
+</script>
+</body>
+</html>

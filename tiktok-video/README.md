@@ -48,3 +48,13 @@ Build: `make_voice.py` with `story2_lines.json` → `build_story2.py` (add `--no
 Caption:
 شابّان وصلا إلى إيطاليا بنفس الحلم… بعد سنة، واحد فقط نجح. الفرق؟ 10 دقائق في اليوم 🇮🇹
 #تعلم_الإيطالية #ايطاليا #عرب_ايطاليا #مغاربة_ايطاليا #italiano #imparareitaliano
+
+## Episode 5: cartoon skit "L'italiano è facile?" (`italiano-facile-trentatre.mp4`, 37 s)
+A bored professor in an armchair: "الإيطالية سهلة، صح؟" He answers each Arabic prompt with an Italian word, then raps the
+tongue-twister «Trentatré trentini entrarono a Trento, tutti e trentatré trotterellando» at a mic while a student dances.
+The mouth follows the voice loudness. Original characters drawn in SVG. Italian voice: Kokoro `im_nicola`. Generated beat in the finale.
+Build: `make_voice.py` with `twister_lines.json` → `build_twister.py` → `render_frames.js twister.html` → ffmpeg.
+
+Caption:
+الإيطالية سهلة؟ 😏 جرّب تقول هادي بسرعة 😂🇮🇹 سجّل ديو ووريني 🎤
+#تعلم_الإيطالية #ايطاليا #scioglilingua #italiano #عرب_ايطاليا #fyp

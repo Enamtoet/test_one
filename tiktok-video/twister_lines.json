@@ -1,0 +1,12 @@
+[
+ {"id":"w1","lang":"it","voice":"nicola","speed":0.85,"text":"Trentatré."},
+ {"id":"w2","lang":"it","voice":"nicola","speed":0.85,"text":"Trentini."},
+ {"id":"w3","lang":"it","voice":"nicola","speed":0.85,"text":"Entrarono."},
+ {"id":"w4","lang":"it","voice":"nicola","speed":0.85,"text":"A Trento."},
+ {"id":"w5","lang":"it","voice":"nicola","speed":0.85,"text":"Tutti e trentatré."},
+ {"id":"w6","lang":"it","voice":"nicola","speed":0.85,"text":"Trotterellando."},
+ {"id":"f1","lang":"it","voice":"nicola","speed":1.0,"text":"Trentatré trentini"},
+ {"id":"f2","lang":"it","voice":"nicola","speed":1.0,"text":"entrarono a Trento,"},
+ {"id":"f3","lang":"it","voice":"nicola","speed":1.0,"text":"tutti e trentatré"},
+ {"id":"f4","lang":"it","voice":"nicola","speed":1.0,"text":"trotterellando!"}
+]
