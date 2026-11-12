@@ -39,3 +39,12 @@ Build: `node render_frames.js pro.html <frames>` → ffmpeg with `-crf 20 -maxra
 Caption:
 3 أخطاء يقع فيها كل العرب في الإيطالية 🇮🇹 أيّ خطأ كنت تقع فيه؟ اكتب الرقم 👇
 #تعلم_الإيطالية #ايطاليا #عرب_ايطاليا #italiano #imparareitaliano #learnitalian
+
+## Episode 4: "Due ragazzi" stickman explainer (`due-ragazzi-voice.mp4` / `due-ragazzi-music.mp4`, 43 s)
+Minimal black and white explainer: white pictogram figures, split-screen comparison, Italian narration (Kokoro `im_nicola`),
+word-by-word Italian captions with glowing key words, and an Arabic translation under every line.
+Build: `make_voice.py` with `story2_lines.json` → `build_story2.py` (add `--no-voice` for the music-only mix) → `render_frames.js story2.html` → ffmpeg.
+
+Caption:
+شابّان وصلا إلى إيطاليا بنفس الحلم… بعد سنة، واحد فقط نجح. الفرق؟ 10 دقائق في اليوم 🇮🇹
+#تعلم_الإيطالية #ايطاليا #عرب_ايطاليا #مغاربة_ايطاليا #italiano #imparareitaliano

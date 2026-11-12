@@ -1,0 +1,16 @@
+[
+ {"id":"s01","lang":"it","voice":"nicola","speed":0.9,"text":"Se vivi in Italia e non parli ancora italiano,","ar":"إذا كنت تعيش في إيطاليا ولا تتكلم الإيطالية بعد،"},
+ {"id":"s02","lang":"it","voice":"nicola","speed":0.9,"text":"c'è un motivo.","ar":"فهناك سبب.","key":"motivo"},
+ {"id":"s03","lang":"it","voice":"nicola","speed":0.9,"text":"Due ragazzi arrivano in Italia.","ar":"شابّان يصلان إلى إيطاليا."},
+ {"id":"s04","lang":"it","voice":"nicola","speed":0.9,"text":"Stessa valigia. Stesso sogno.","ar":"نفس الحقيبة. نفس الحلم.","key":"sogno"},
+ {"id":"s05","lang":"it","voice":"nicola","speed":0.9,"text":"Il primo dice: imparo dopo.","ar":"الأول يقول: سأتعلم لاحقاً.","key":"dopo"},
+ {"id":"s06","lang":"it","voice":"nicola","speed":0.9,"text":"Il secondo studia dieci minuti al giorno.","ar":"الثاني يدرس عشر دقائق في اليوم.","key":"minuti"},
+ {"id":"s07","lang":"it","voice":"nicola","speed":0.9,"text":"Passa un anno.","ar":"تمرّ سنة.","key":"anno"},
+ {"id":"s08","lang":"it","voice":"nicola","speed":0.9,"text":"Il primo ha bisogno di qualcuno per tutto.","ar":"الأول يحتاج إلى شخص في كل شيء.","key":"tutto"},
+ {"id":"s09","lang":"it","voice":"nicola","speed":0.9,"text":"Dal medico. In comune. Al lavoro.","ar":"عند الطبيب. في البلدية. في العمل."},
+ {"id":"s10","lang":"it","voice":"nicola","speed":0.9,"text":"Il secondo parla, capisce,","ar":"الثاني يتكلم، يفهم،"},
+ {"id":"s11","lang":"it","voice":"nicola","speed":0.9,"text":"e trova un lavoro migliore.","ar":"ويجد عملاً أفضل.","key":"migliore"},
+ {"id":"s12","lang":"it","voice":"nicola","speed":0.9,"text":"La differenza? Non è il talento.","ar":"الفرق؟ ليس الموهبة.","key":"talento"},
+ {"id":"s13","lang":"it","voice":"nicola","speed":0.9,"text":"Sono dieci minuti. Ogni giorno.","ar":"إنها عشر دقائق. كل يوم.","key":"giorno"},
+ {"id":"s14","lang":"it","voice":"nicola","speed":0.88,"text":"Inizia oggi.","ar":"ابدأ اليوم.","key":"oggi"}
+]
