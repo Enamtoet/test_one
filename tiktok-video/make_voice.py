@@ -5,7 +5,10 @@ tts-models/vits-piper-it_IT-paola-medium, asr-models/sherpa-onnx-whisper-base
 """
 import sys, json, re, difflib, unicodedata, numpy as np, soundfile as sf, sherpa_onnx
 M, vo, N = sys.argv[1], sys.argv[2], int(sys.argv[3])
-V = {'ar':'vits-piper-ar_JO-kareem-medium/ar_JO-kareem-medium','it':'vits-piper-it_IT-paola-medium/it_IT-paola-medium'}
+V = {'ar':'vits-piper-ar_JO-kareem-medium/ar_JO-kareem-medium','it':'vits-piper-it_IT-paola-medium/it_IT-paola-medium',
+     'dii':'vits-piper-ar_JO-SA_dii-high/ar_JO-SA_dii-high','miro':'vits-piper-ar_JO-SA_miro-high/ar_JO-SA_miro-high',
+     'miro2':'vits-piper-ar_JO-SA_miro_V2-high/ar_JO-SA_miro_V2-high'}
+LANG = {'it':'it'}  # every other voice is Arabic
 def mk_tts(lang):
     b=f"{M}/{V[lang]}"; d=b.rsplit('/',1)[0]
     return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
@@ -14,7 +17,7 @@ W=f"{M}/sherpa-onnx-whisper-base"
 def mk_asr(lang):
     return sherpa_onnx.OfflineRecognizer.from_whisper(encoder=f"{W}/base-encoder.onnx",decoder=f"{W}/base-decoder.onnx",
         tokens=f"{W}/base-tokens.txt",language=lang,task="transcribe",num_threads=4)
-T={l:mk_tts(l) for l in V}; A={l:mk_asr(l) for l in V}
+T={}; A={l:mk_asr(l) for l in ('ar','it')}
 def norm(s):
     s=''.join(c for c in unicodedata.normalize('NFKD',s) if not unicodedata.combining(c))
     s=s.replace('أ','ا').replace('إ','ا').replace('ة','ه').replace('ى','ي').lower()
@@ -22,7 +25,9 @@ def norm(s):
 for it in json.load(open(f"{vo}/lines.json")):
     best=None
     for k in range(N):
-        a=T[it['lang']].generate(it['text'],sid=0,speed=it.get('speed',1.0))
+        v=it.get('voice',it['lang'])
+        if v not in T: T[v]=mk_tts(v)
+        a=T[v].generate(it['text'],sid=0,speed=it.get('speed',1.0))
         x=np.array(a.samples,dtype='float32'); sr=a.sample_rate
         pad=np.concatenate([np.zeros(int(sr*.3),'float32'),x,np.zeros(int(sr*.5),'float32')])
         s=A[it['lang']].create_stream(); s.accept_waveform(sr,pad); A[it['lang']].decode_stream(s)
