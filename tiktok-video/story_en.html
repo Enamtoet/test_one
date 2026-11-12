@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Marco froze</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:#000; }
+  body { color:#fff; font-family:'Inter',sans-serif; position:relative; }
+  #caps { position:absolute; left:80px; right:80px; top:250px; height:430px; }
+  .cap { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; opacity:0; }
+  .itl { font-weight:600; font-size:58px; line-height:1.3; direction:ltr; }
+  .itl span { display:inline-block; margin:0 .14em; }
+  .itl .key { display:block; font-weight:900; font-size:132px; letter-spacing:-2px; text-transform:uppercase; line-height:1.05; margin-top:6px;
+              text-shadow:0 0 18px rgba(255,255,255,.65), 0 0 50px rgba(255,255,255,.35); }
+  .arl { font-family:'Playfair Display'; font-style:italic; font-weight:500; font-size:46px; color:#A9A9A9; margin-top:26px; direction:ltr; }
+  #stage { position:absolute; left:0; top:700px; width:1080px; height:900px; }
+  #cta { position:absolute; left:80px; right:80px; top:1650px; text-align:center; font-family:'Inter'; font-weight:700;
+         font-size:44px; color:#fff; opacity:0; direction:ltr; }
+  #cta small { display:block; font-family:'Inter'; font-weight:600; font-size:26px; letter-spacing:8px; color:#8a8a8a; margin-top:14px; direction:ltr; }
+</style>
+</head>
+<body>
+<div id="caps"></div>
+<svg id="stage" viewBox="0 0 1080 900" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="cta">Seguimi · 5 minuti di inglese al giorno<small>SPEAK · EVERY · DAY</small></div>
+<script>
+let TL;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const eio = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2;
+const eo = x => 1 - Math.pow(1 - x, 3);
+const back = x => { const c1 = 1.6, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+const P = (L, t0, d = 0.5) => clamp((L - t0) / d);   // progress helper
+const GY = 820;                                         // ground line
+const W = '#fff', DIM = '#4a4a4a', MID = '#8a8a8a';
+
+// ---------- primitives
+function fig(x, o = {}) {
+  const c = o.dim ? DIM : W, s = o.s ?? 1, y = o.y ?? GY, op = o.op ?? 1, bob = o.bob ?? 0;
+  const g = `<g transform="translate(${x},${y + bob}) scale(${s})" opacity="${op}">
+    <circle cx="0" cy="-152" r="27" fill="${o.outline ? 'none' : c}" stroke="${c}" stroke-width="${o.outline ? 6 : 0}"/>
+    <path d="M-36 0 L-36 -82 Q-36 -116 0 -116 Q36 -116 36 -82 L36 0 Z" fill="${o.outline ? 'none' : c}" stroke="${c}" stroke-width="${o.outline ? 6 : 0}"/>
+  </g>`;
+  return g;
+}
+const txt = (x, y, s, o = {}) => `<text x="${x}" y="${y}" fill="${o.c || W}" font-family="Inter" font-weight="${o.w || 600}" font-size="${o.fs || 26}"
+   letter-spacing="${o.ls ?? 6}" text-anchor="${o.a || 'middle'}" opacity="${o.op ?? 1}" ${o.extra || ''}>${s}</text>`;
+const suitcase = (x, op = 1) => `<g opacity="${op}" transform="translate(${x},${GY})"><rect x="-26" y="-62" width="52" height="62" rx="8" fill="none" stroke="${W}" stroke-width="5"/>
+   <path d="M-10 -62 v-12 h20 v12" fill="none" stroke="${W}" stroke-width="5"/></g>`;
+function bubble(x, y, s, p, o = {}) {           // speech bubble anchored bottom-left at x,y
+  if (p <= 0) return '';
+  const w = o.w || (s.length * 24 + 50), h = 76, sc = 0.6 + 0.4 * back(p);
+  return `<g transform="translate(${x},${y}) scale(${sc})" opacity="${clamp(p * 2)}">
+    <rect x="0" y="${-h}" width="${w}" height="${h}" rx="38" fill="none" stroke="${o.c || W}" stroke-width="4"/>
+    <path d="M28 0 l-6 22 l26 -22" fill="#000" stroke="${o.c || W}" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="20" y="-4" width="40" height="8" fill="#000"/>
+    <text x="${w / 2}" y="${-h / 2 + 11}" fill="${o.c || W}" font-family="Inter" font-weight="700" font-size="32" text-anchor="middle">${s}</text></g>`;
+}
+function ring(cx, cy, r, p, label, o = {}) {
+  const C = 2 * Math.PI * r;
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2a2a2a" stroke-width="${o.sw || 10}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${W}" stroke-width="${o.sw || 10}" stroke-linecap="round"
+      stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - p)}" transform="rotate(-90 ${cx} ${cy})"/>
+    ${txt(cx, cy + (o.fs || 46) * 0.36, label, { fs: o.fs || 46, w: 800, ls: 0 })}`;
+}
+function bar(x, y, w, p, label, op = 1) {
+  return `<g opacity="${op}">${txt(x, y - 18, label, { a: 'start', fs: 22 })}${txt(x + w, y - 18, Math.round(p * 100) + '%', { a: 'end', fs: 22 })}
+    <rect x="${x}" y="${y}" width="${w}" height="14" rx="7" fill="#2a2a2a"/><rect x="${x}" y="${y}" width="${w * p}" height="14" rx="7" fill="${W}"/></g>`;
+}
+const divider = op => `<line x1="540" y1="40" x2="540" y2="${GY}" stroke="#555" stroke-width="3" stroke-dasharray="10 14" opacity="${op}"/>`;
+const cols = (op, la = 1, ra = 1) => txt(270, 70, 'IL PRIMO', { op: op * la, fs: 28, w: 700 }) + txt(810, 70, 'IL SECONDO', { op: op * ra, fs: 28, w: 700 });
+const icon = {
+  medico: (x, y) => `<circle cx="${x}" cy="${y}" r="44" fill="none" stroke="${W}" stroke-width="5"/><path d="M${x-8} ${y-24}h16v16h16v16h-16v16h-16v-16h-16v-16h16z" fill="${W}"/>`,
+  comune: (x, y) => `<path d="M${x-46} ${y-14} L${x} ${y-44} L${x+46} ${y-14} Z" fill="none" stroke="${W}" stroke-width="5"/>
+     ${[-30,-10,10,30].map(d => `<rect x="${x+d-5}" y="${y-8}" width="10" height="40" fill="${W}"/>`).join('')}<rect x="${x-48}" y="${y+34}" width="96" height="8" fill="${W}"/>`,
+  lavoro: (x, y) => `<rect x="${x-46}" y="${y-24}" width="92" height="64" rx="10" fill="none" stroke="${W}" stroke-width="5"/>
+     <path d="M${x-16} ${y-24} v-14 h32 v14" fill="none" stroke="${W}" stroke-width="5"/><line x1="${x-46}" y1="${y+2}" x2="${x+46}" y2="${y+2}" stroke="${W}" stroke-width="5"/>`,
+  book: (x, y) => `<path d="M${x} ${y} q-34 -16 -64 0 v-56 q30 -16 64 0 z M${x} ${y} q34 -16 64 0 v-56 q-30 -16 -64 0 z" fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"/>`,
+  phone: (x, y) => `<rect x="${x-14}" y="${y-26}" width="28" height="48" rx="6" fill="none" stroke="${W}" stroke-width="4"/>`,
+  star: (x, y, r = 22) => { let d = ''; for (let i = 0; i < 10; i++) { const a = Math.PI / 5 * i - Math.PI / 2, rr = i % 2 ? r * .45 : r;
+      d += (i ? 'L' : 'M') + (x + rr * Math.cos(a)).toFixed(1) + ' ' + (y + rr * Math.sin(a)).toFixed(1); } return `<path d="${d}Z" fill="${W}"/>`; },
+};
+
+// ---------- scenes (English episode: "Marco froze")
+const hat = (x, y = GY) => `<g transform="translate(${x},${y})"><rect x="-40" y="-188" width="80" height="12" rx="6" fill="${W}"/><path d="M-26 -186 Q-26 -226 0 -226 Q26 -226 26 -186 Z" fill="${W}"/></g>`;
+const xmark = (x, y, r, op = 1) => `<g opacity="${op}" stroke="${W}" stroke-width="10" stroke-linecap="round"><line x1="${x-r}" y1="${y-r}" x2="${x+r}" y2="${y+r}"/><line x1="${x+r}" y1="${y-r}" x2="${x-r}" y2="${y+r}"/></g>`;
+const check = (x, y, s, op = 1) => `<path d="M${x-s} ${y} l${s*.7} ${s*.7} l${s*1.4} ${-s*1.5}" fill="none" stroke="${W}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`;
+function vbar(x, p, label, op = 1) {
+  const h = 420 * p;
+  return `<g opacity="${op}"><rect x="${x-70}" y="${GY-20-420}" width="140" height="420" rx="16" fill="none" stroke="#333" stroke-width="4"/>
+    <rect x="${x-70}" y="${GY-20-h}" width="140" height="${h}" rx="16" fill="${W}"/>
+    ${txt(x, GY - 470, Math.round(p * 100) + '%', { fs: 44, w: 900, ls: 0 })}${txt(x, 80, label, { fs: 28, w: 700 })}</g>`;
+}
+function waves(x, y, L, op = 1) {
+  let s = '';
+  for (let i = 0; i < 3; i++) {
+    const p = ((L * 1.2 + i / 3) % 1), r = 30 + p * 90;
+    s += `<path d="M${x + r * .5} ${y - r * .8} A ${r} ${r} 0 0 1 ${x + r * .5} ${y + r * .8}" fill="none" stroke="${W}" stroke-width="6" stroke-linecap="round" opacity="${(1 - p) * op}"/>`;
+  }
+  return s;
+}
+function spinner(x, y, L, op) {
+  const a = (L * 360 * 1.3) % 360;
+  return `<g opacity="${op}" transform="rotate(${a} ${x} ${y})"><circle cx="${x}" cy="${y}" r="34" fill="none" stroke="#333" stroke-width="8"/>
+    <path d="M${x} ${y - 34} A 34 34 0 0 1 ${x + 34} ${y}" fill="none" stroke="${W}" stroke-width="8" stroke-linecap="round"/></g>`;
+}
+const SC = {
+  A(L, ts) {
+    let s = fig(380, { op: P(L, 0.05) });
+    const n = Math.min(10, Math.floor(eio(P(L, 0.3, 2.4)) * 10.999));
+    for (let i = 0; i < n; i++) s += `<rect x="${560 + (i % 2) * 8}" y="${GY - 34 - i * 34}" width="200" height="30" rx="5" fill="${i % 2 ? '#fff' : 'none'}" stroke="${W}" stroke-width="4"/>`;
+    s += txt(670, GY - 34 - 10 * 34 - 30, n ? `YEAR ${n}` : '', { fs: 28, w: 800 });
+    s += txt(380, 120, 'SCHOOL', { fs: 28, w: 700, ls: 14, op: P(L, 0.2) });
+    return s;
+  },
+  B(L, ts, wt) {
+    let s = fig(540);
+    const items = [['GRAMMAR', 0], ['VERBS', 1], ['EXAMS', 2]];
+    items.forEach(([lab, wi], i) => {
+      const p = P(L, (wt[0][wi] ?? i * 0.7) - 0.05, 0.4); if (p <= 0) return;
+      const x = 220 + i * 320, y = 300;
+      let ic = '';
+      if (i === 0) ic = icon.book(x + 0, y + 30);
+      if (i === 1) ic = [0, 1, 2].map(k => `<circle cx="${x - 50}" cy="${y - 30 + k * 32}" r="7" fill="${W}"/><rect x="${x - 34}" y="${y - 35 + k * 32}" width="90" height="10" rx="5" fill="${W}"/>`).join('');
+      if (i === 2) ic = `<rect x="${x - 50}" y="${y - 65}" width="100" height="130" rx="10" fill="none" stroke="${W}" stroke-width="5"/>${txt(x, y + 20, 'A+', { fs: 52, w: 900, ls: 0 })}`;
+      s += `<g opacity="${p}" transform="translate(0,${(1 - back(p)) * 30})">${ic}${txt(x, y + 120, lab, { fs: 24, w: 700 })}</g>`;
+    });
+    return s;
+  },
+  C(L) {
+    const w = eio(P(L, 0, 1.6)), x = -100 + 480 * w, bob = -Math.abs(Math.sin(L * 9)) * 10 * (1 - w);
+    let s = fig(x, { bob }) + suitcase(x + 72);
+    const o = P(L, 0.3, 0.6);
+    s += `<g opacity="${o}" fill="none" stroke="${W}" stroke-width="5">
+      <rect x="760" y="${GY - 520}" width="90" height="520"/><circle cx="805" cy="${GY - 440}" r="30"/><path d="M760 ${GY - 520} L805 ${GY - 610} L850 ${GY - 520}"/>
+      <line x1="805" y1="${GY - 440}" x2="805" y2="${GY - 462}"/><line x1="805" y1="${GY - 440}" x2="820" y2="${GY - 432}"/>
+      <rect x="880" y="${GY - 260}" width="120" height="260"/><rect x="650" y="${GY - 200}" width="100" height="200"/></g>`;
+    s += txt(840, 110, 'LONDON', { fs: 30, w: 700, ls: 14, op: o });
+    return s;
+  },
+  D(L, ts) {
+    let s = '';
+    const fr = P(L, ts[1], 0.3);
+    const shake = fr > 0 && fr < 1 ? Math.sin(L * 80) * 5 : 0;
+    s += fig(360 + shake) + fig(720) + hat(720);
+    s += bubble(560, GY - 250, 'How are you?', P(L, ts[0] + 1.0, 0.4), { w: 300 });
+    if (fr > 0) {
+      s += bubble(240, GY - 250, '. . .', fr, { w: 140 });
+      // tension lines around Marco's head
+      s += `<g stroke="${W}" stroke-width="5" stroke-linecap="round" opacity="${fr}">
+        <line x1="300" y1="${GY - 200}" x2="280" y2="${GY - 215}"/><line x1="296" y1="${GY - 165}" x2="272" y2="${GY - 165}"/>
+        <line x1="420" y1="${GY - 200}" x2="440" y2="${GY - 215}"/><line x1="424" y1="${GY - 165}" x2="448" y2="${GY - 165}"/></g>`;
+    }
+    return s;
+  },
+  E(L) {
+    let s = fig(540) + txt(540, 120, '10 YEARS', { fs: 28, w: 700, ls: 12, op: P(L, 0.1) });
+    s += bar(300, 360, 480, 0, 'SPEAKING', P(L, 0.2));
+    s += spinner(540, 500, L, P(L, 0.4));
+    return s;
+  },
+  F(L, ts) {
+    let s = divider(1);
+    s += vbar(270, eio(P(L, 0.3, 1.4)), 'STUDIED', 1);
+    s += check(270, 230, 34, P(L, 1.7, 0.3));
+    const on = P(L, ts[1], 0.4);
+    s += vbar(810, 0, 'SPOKEN', 0.25 + 0.75 * on);
+    s += xmark(810, 250, 34, P(L, ts[1] + 0.6, 0.3));
+    return s;
+  },
+  G(L) {
+    let s = fig(420) + waves(470, GY - 152, L, P(L, 0.4));
+    s += `<g opacity="${P(L, 0.1)}">${ring(800, 300, 90, eio(P(L, 0.4, 2.6)), "5'", { fs: 60 })}</g>`;
+    s += txt(800, 450, 'EVERY DAY', { fs: 24, w: 700, op: P(L, 1.2) });
+    s += txt(420, 120, 'OUT LOUD', { fs: 28, w: 700, ls: 14, op: P(L, 0.6) });
+    return s;
+  },
+  H(L, ts) {
+    let s = fig(360) + fig(720) + hat(720);
+    s += bubble(560, GY - 260, 'How are you?', P(L, 0.1, 0.35), { w: 300 });
+    s += bubble(160, GY - 260, 'Great, thanks!', P(L, 0.7, 0.35), { w: 330 });
+    const n = Math.max(1, Math.round(90 * eio(P(L, 0.2, 1.8))));
+    s += `<rect x="90" y="80" width="200" height="170" rx="16" fill="#000" stroke="${W}" stroke-width="5"/><rect x="90" y="80" width="200" height="46" rx="16" fill="${W}"/>
+      <rect x="90" y="106" width="200" height="20" fill="${W}"/>${txt(190, 113, 'DAY', { c: '#000', fs: 24, w: 800 })}${txt(190, 220, n, { fs: 76, w: 900, ls: 0 })}`;
+    s += bar(380, 160, 600, 0.7 * eio(P(L, 0.4, 2.2)), 'SPEAKING');
+    return s;
+  },
+  I(L, ts, wt) {
+    let s = fig(540);
+    s += txt(540, 230, 'STUDY', { fs: 100, w: 900, ls: 2, op: P(L, 0.05) });
+    const k = eio(P(L, (wt[0][1] ?? 0.8) + 0.1, 0.4));
+    s += `<line x1="380" y1="196" x2="${380 + 320 * k}" y2="196" stroke="${W}" stroke-width="12" stroke-linecap="round"/>`;
+    const sp = P(L, (wt[0][3] ?? 1.6) - 0.1, 0.4);
+    s += txt(540, 420, 'SPEAK', { fs: 130, w: 900, ls: 2, op: sp, extra: `style="filter:drop-shadow(0 0 18px rgba(255,255,255,.6))"` });
+    s += waves(590, GY - 152, L, sp);
+    return s;
+  },
+  J(L) {
+    const pts = [[270, 640], [340, 610], [430, 630], [560, 500], [680, 430], [790, 300], [880, 180]];
+    const draw = eio(P(L, 0.2, 2.0));
+    const d = 'M' + pts.map(p => p.join(' ')).join(' L');
+    let len = 0; for (let i = 1; i < pts.length; i++) len += Math.hypot(pts[i][0] - pts[i-1][0], pts[i][1] - pts[i-1][1]);
+    let s = `<path d="${d}" fill="none" stroke="${W}" stroke-width="4" stroke-dasharray="4 14" stroke-linecap="round" mask="url(#m)"/>
+      <defs><mask id="m"><path d="${d}" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="${len}" stroke-dashoffset="${len * (1 - draw)}"/></mask></defs>`;
+    pts.slice(0, -1).forEach(([x, y], i) => { if (draw * (pts.length - 1) >= i) s += `<circle cx="${x}" cy="${y}" r="7" fill="${W}"/>`; });
+    const st = P(L, 2.0, 0.4);
+    s += `<g opacity="${st}">${icon.star(880, 180, 30 * (0.6 + 0.4 * back(st)))}</g>` + txt(880, 120, 'FLUENT', { fs: 24, w: 700, op: st });
+    s += fig(200) + txt(200, 600, 'TODAY', { fs: 24, w: 700, op: P(L, 0.4) });
+    const b = P(L, 0.6, 0.4), bx = 200, by = 735, r = 105;
+    if (b > 0) s += `<g stroke="${W}" stroke-width="5" fill="none" opacity="${b}">
+       <path d="M${bx-r} ${by-r+40} v-40 h40"/><path d="M${bx+r-40} ${by-r} h40 v40"/><path d="M${bx-r} ${by+r-40} v40 h40"/><path d="M${bx+r-40} ${by+r} h40 v-40"/></g>`;
+    return s;
+  },
+};
+
+window.setTimeline = tl => {
+  TL = tl; window.TOTAL = tl.total;
+  const box = document.getElementById('caps');
+  box.innerHTML = tl.sentences.map(s => `<div class="cap" id="c_${s.id}"><div class="itl">${
+     s.words.map((w, i) => `<span data-i="${i}" class="${w.key ? 'key' : ''}">${w.w}</span>`).join('')}</div><div class="arl">${s.ar}</div></div>`).join('');
+};
+
+window.render = function (t) {
+  // captions
+  for (const s of TL.sentences) {
+    const el = document.getElementById('c_' + s.id);
+    if (t < s.start - 0.15 || t > s.hold) { el.style.opacity = 0; continue; }
+    const out = clamp((s.hold - t) / 0.22);
+    el.style.opacity = out; el.style.filter = out < 1 ? `blur(${(1 - out) * 10}px)` : '';
+    el.querySelectorAll('.itl span').forEach(sp => {
+      const w = s.words[+sp.dataset.i], p = clamp((t - w.t + 0.05) / 0.22);
+      sp.style.opacity = p;
+      sp.style.filter = p < 1 ? `blur(${(1 - p) * 8}px)` : '';
+      sp.style.transform = w.key ? `scale(${0.7 + 0.3 * back(p)})` : `translateY(${(1 - eo(p)) * 14}px)`;
+    });
+    const ar = el.querySelector('.arl'); const pa = clamp((t - s.start - 0.25) / 0.4);
+    ar.style.opacity = pa; ar.style.transform = `translateY(${(1 - eo(pa)) * 16}px)`;
+  }
+  // stage
+  let svg = `<line x1="0" y1="${GY}" x2="1080" y2="${GY}" stroke="#fff" stroke-width="3" opacity=".9"/>`;
+  for (const sc of TL.scenes) {
+    if (t < sc.start || t > sc.end) continue;
+    const L = t - sc.start;
+    const ss = TL.sentences.filter(s => s.scene === sc.id);
+    const ts = ss.map(s => s.start - sc.start), wt = ss.map(s => s.words.map(w => w.t - sc.start));
+    const fin = clamp(L / 0.3), fout = clamp((sc.end - t) / 0.3);
+    svg += `<g opacity="${Math.min(fin, fout)}" style="filter:blur(${(1 - Math.min(fin, fout)) * 6}px)">${SC[sc.id](L, ts, wt)}</g>`;
+  }
+  document.getElementById('stage').innerHTML = svg;
+  const c = clamp((t - (TL.total - 2.6)) / 0.5);
+  document.getElementById('cta').style.opacity = c;
+};
+</script>
+</body>
+</html>

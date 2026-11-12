@@ -1,7 +1,8 @@
 """Timeline + audio for story2.html (stickman explainer, Italian narration + IT/AR captions).
 
-Usage: python3 build_story2.py <voice_dir> <out_dir> [--no-voice]
-Reads story2_lines.json (next to this script) and <voice_dir>/<id>.wav (Kokoro, 24 kHz).
+Usage: python3 build_story2.py <voice_dir> <out_dir> [--no-voice] [--lines other_lines.json]
+Reads story2_lines.json (or --lines) and <voice_dir>/<id>.wav (Kokoro, 24 kHz).
+Lines may carry their own "scene" letter and a translation in "ar" or "tr".
 Writes <out_dir>/timeline.json and <out_dir>/mix.wav (or mix_novoice.wav).
 """
 import sys, os, json, re, math
@@ -10,12 +11,20 @@ import numpy as np, soundfile as sf
 VO, OUT = sys.argv[1], sys.argv[2]
 NO_VOICE = "--no-voice" in sys.argv
 HERE = os.path.dirname(os.path.abspath(__file__))
-LINES = json.load(open(f"{HERE}/story2_lines.json"))
+LF = sys.argv[sys.argv.index("--lines") + 1] if "--lines" in sys.argv else f"{HERE}/story2_lines.json"
+LINES = json.load(open(LF))
 SR = 24000
 
 # which sentences belong to which visual scene
-SCENES = [("A", ["s01", "s02"]), ("B", ["s03", "s04"]), ("C", ["s05", "s06"]), ("D", ["s07"]),
+SCENES_DEFAULT = [("A", ["s01", "s02"]), ("B", ["s03", "s04"]), ("C", ["s05", "s06"]), ("D", ["s07"]),
           ("E", ["s08", "s09"]), ("F", ["s10", "s11"]), ("G", ["s12"]), ("H", ["s13"]), ("I", ["s14"])]
+if all("scene" in l for l in LINES):
+    SCENES = []
+    for l in LINES:
+        if not SCENES or SCENES[-1][0] != l["scene"]: SCENES.append((l["scene"], []))
+        SCENES[-1][1].append(l["id"])
+else:
+    SCENES = SCENES_DEFAULT
 scene_of = {sid: sc for sc, ids in SCENES for sid in ids}
 
 clips, sents = [], []
@@ -40,7 +49,7 @@ for ln in LINES:
         wl.append({"w": w, "t": round(t + d * acc / tot * 0.95, 3),
                    "key": bool(ln.get("key")) and re.sub(r"\W", "", w).lower() == ln["key"]})
         acc += k
-    sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln["ar"], "words": wl})
+    sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln.get("ar") or ln.get("tr"), "words": wl})
     t += d + 0.35
     prev_scene = sc
 

@@ -9,13 +9,14 @@ V = {'ar':'vits-piper-ar_JO-kareem-medium/ar_JO-kareem-medium','it':'vits-piper-
      'dii':'vits-piper-ar_JO-SA_dii-high/ar_JO-SA_dii-high','miro':'vits-piper-ar_JO-SA_miro-high/ar_JO-SA_miro-high',
      'miro2':'vits-piper-ar_JO-SA_miro_V2-high/ar_JO-SA_miro_V2-high'}
 LANG = {'it':'it'}  # every other voice is Arabic
-KOKORO = {'sara': 35, 'nicola': 36}  # Italian speakers in kokoro-multi-lang-v1_0
+KOKORO = {'sara': 35, 'nicola': 36, 'michael': 16, 'george': 26}  # kokoro-multi-lang-v1_0 speaker ids
+KLANG = {'sara': 'it', 'nicola': 'it', 'michael': 'en-us', 'george': 'en'}
 def mk_tts(lang):
     if lang in KOKORO:
         d=f"{M}/kokoro-multi-lang-v1_0"
         return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
             kokoro=sherpa_onnx.OfflineTtsKokoroModelConfig(model=d+'/model.onnx',voices=d+'/voices.bin',tokens=d+'/tokens.txt',
-                data_dir=d+'/espeak-ng-data',dict_dir=d+'/dict',lexicon=d+'/lexicon-us-en.txt',lang='it'),num_threads=4)))
+                data_dir=d+'/espeak-ng-data',dict_dir=d+'/dict',lexicon=(d+'/lexicon-gb-en.txt' if lang=='george' else d+'/lexicon-us-en.txt'),lang=KLANG[lang]),num_threads=4)))
     b=f"{M}/{V[lang]}"; d=b.rsplit('/',1)[0]
     return sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
         vits=sherpa_onnx.OfflineTtsVitsModelConfig(model=b+'.onnx',tokens=d+'/tokens.txt',data_dir=d+'/espeak-ng-data'),num_threads=4)))
@@ -23,10 +24,11 @@ W=f"{M}/sherpa-onnx-whisper-base"
 def mk_asr(lang):
     return sherpa_onnx.OfflineRecognizer.from_whisper(encoder=f"{W}/base-encoder.onnx",decoder=f"{W}/base-decoder.onnx",
         tokens=f"{W}/base-tokens.txt",language=lang,task="transcribe",num_threads=4)
-T={}; A={l:mk_asr(l) for l in ('ar','it')}
+T={}; A={l:mk_asr(l) for l in ('ar','it','en')}
 def norm(s):
     s=''.join(c for c in unicodedata.normalize('NFKD',s) if not unicodedata.combining(c))
     s=s.replace("33","trentatre")
+    s=s.replace("10","ten").replace("5","five").replace("3","three")
     s=s.replace('أ','ا').replace('إ','ا').replace('ة','ه').replace('ى','ي').lower()
     return re.sub(r"[^\w]","",s)
 for it in json.load(open(f"{vo}/lines.json")):

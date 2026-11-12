@@ -1,0 +1,121 @@
+[
+ {
+  "id": "e01",
+  "scene": "A",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "Marco studied English for ten years.",
+  "tr": "Marco ha studiato inglese per dieci anni.",
+  "key": "years"
+ },
+ {
+  "id": "e02",
+  "scene": "B",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "Grammar. Verbs. Exams.",
+  "tr": "Grammatica. Verbi. Esami.",
+  "key": "exams"
+ },
+ {
+  "id": "e03",
+  "scene": "C",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "Then he moved to London.",
+  "tr": "Poi si è trasferito a Londra.",
+  "key": "london"
+ },
+ {
+  "id": "e04",
+  "scene": "D",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "A man asked him: how are you?",
+  "tr": "Un uomo gli ha chiesto: come stai?"
+ },
+ {
+  "id": "e05",
+  "scene": "D",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.85,
+  "text": "Marco just froze.",
+  "tr": "Marco si è bloccato.",
+  "key": "froze"
+ },
+ {
+  "id": "e06",
+  "scene": "E",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.82,
+  "text": "Ten years, and no words.",
+  "tr": "Dieci anni, e nessuna parola.",
+  "key": "words"
+ },
+ {
+  "id": "e07",
+  "scene": "F",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "The problem? He studied English.",
+  "tr": "Il problema? Ha studiato l'inglese.",
+  "key": "studied"
+ },
+ {
+  "id": "e08",
+  "scene": "F",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "But he never spoke it.",
+  "tr": "Ma non l'ha mai parlato.",
+  "key": "spoke"
+ },
+ {
+  "id": "e09",
+  "scene": "G",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "Now, Marco speaks five minutes a day, out loud.",
+  "tr": "Ora Marco parla cinque minuti al giorno, ad alta voce.",
+  "key": "loud"
+ },
+ {
+  "id": "e10",
+  "scene": "H",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "After three months, he answers without thinking.",
+  "tr": "Dopo tre mesi, risponde senza pensare.",
+  "key": "thinking"
+ },
+ {
+  "id": "e11",
+  "scene": "I",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.92,
+  "text": "Don't study English. Speak it.",
+  "tr": "Non studiare l'inglese. Parlalo.",
+  "key": "speak"
+ },
+ {
+  "id": "e12",
+  "scene": "J",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.9,
+  "text": "Start today.",
+  "tr": "Inizia oggi.",
+  "key": "today"
+ }
+]

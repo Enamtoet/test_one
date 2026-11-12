@@ -58,3 +58,12 @@ Build: `make_voice.py` with `twister_lines.json` → `build_twister.py` → `ren
 Caption:
 الإيطالية سهلة؟ 😏 جرّب تقول هادي بسرعة 😂🇮🇹 سجّل ديو ووريني 🎤
 #تعلم_الإيطالية #ايطاليا #scioglilingua #italiano #عرب_ايطاليا #fyp
+
+## Episode 6 (Italians learning English): "Marco froze" stickman explainer (`marco-froze-voice.mp4` / `marco-froze-music.mp4`, 38 s)
+Same stickman style as "Due ragazzi", for an Italian audience: British English narration (Kokoro `bm_george`),
+English word-by-word captions with glowing key words, and an Italian translation under every line.
+Build: `make_voice.py` with `story_en_lines.json` → `build_story2.py --lines story_en_lines.json` (add `--no-voice`) → `render_frames.js story_en.html` → ffmpeg.
+
+Caption (IT):
+10 anni di inglese a scuola… e a Londra non riesci a dire una parola? 😶 Il problema non sei tu. 🇬🇧
+#inglese #imparareinglese #ingleseperitaliani #learnenglish #englishtips #fyp
