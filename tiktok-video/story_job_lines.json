@@ -1,0 +1,124 @@
+[
+ {
+  "id": "h01",
+  "scene": "A",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "One word cost Luca a job in London.",
+  "tr": "Una parola è costata a Luca un lavoro a Londra.",
+  "key": "job",
+  "stamp": 1.0
+ },
+ {
+  "id": "h02",
+  "scene": "A",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Guess which one, before the end.",
+  "tr": "Indovina quale, prima della fine.",
+  "key": "end"
+ },
+ {
+  "id": "h03",
+  "scene": "B",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "The interview starts. Tell me about yourself.",
+  "tr": "Inizia il colloquio. Parlami di te.",
+  "key": "yourself"
+ },
+ {
+  "id": "h04",
+  "scene": "B",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Luca says: I'm very sensible.",
+  "tr": "Luca dice: sono molto sensibile.",
+  "key": "sensible"
+ },
+ {
+  "id": "h05",
+  "scene": "C",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Sensible means reasonable. Sensibile is sensitive. Not a disaster.",
+  "tr": "Sensible vuol dire assennato. Sensibile si dice sensitive. Non è grave.",
+  "key": "disaster"
+ },
+ {
+  "id": "h06",
+  "scene": "D",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Then: my parents live here too.",
+  "tr": "Poi: anche i miei parenti vivono qui.",
+  "key": "parents"
+ },
+ {
+  "id": "h07",
+  "scene": "E",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Parents are mum and dad. Parenti are relatives. Still not the one.",
+  "tr": "Parents sono mamma e papà. I parenti sono relatives. Non è ancora questa.",
+  "key": "one"
+ },
+ {
+  "id": "h08",
+  "scene": "F",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Last question: when can you start?",
+  "tr": "Ultima domanda: quando puoi iniziare?",
+  "key": "start"
+ },
+ {
+  "id": "h09",
+  "scene": "F",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.85,
+  "text": "Luca says: eventually.",
+  "tr": "Luca risponde: eventually.",
+  "key": "eventually"
+ },
+ {
+  "id": "h10",
+  "scene": "G",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Eventually means: after a long time. Maybe never.",
+  "tr": "Eventually vuol dire: dopo tanto tempo. Forse mai.",
+  "key": "never",
+  "stamp": 0.15
+ },
+ {
+  "id": "h11",
+  "scene": "H",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "He meant eventualmente: if needed.",
+  "tr": "Lui intendeva eventualmente: se serve.",
+  "key": "needed"
+ },
+ {
+  "id": "h12",
+  "scene": "I",
+  "lang": "en",
+  "voice": "george",
+  "speed": 0.95,
+  "text": "Did you guess it? Tell me in the comments.",
+  "tr": "L'avevi indovinata? Scrivilo nei commenti.",
+  "key": "comments"
+ }
+]

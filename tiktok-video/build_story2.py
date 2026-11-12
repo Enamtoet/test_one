@@ -27,8 +27,8 @@ else:
     SCENES = SCENES_DEFAULT
 scene_of = {sid: sc for sc, ids in SCENES for sid in ids}
 
-clips, sents = [], []
-t = 0.6
+clips, sents, stamps = [], [], []
+t = float(sys.argv[sys.argv.index("--t0") + 1]) if "--t0" in sys.argv else 0.6
 prev_scene = None
 for ln in LINES:
     sc = scene_of[ln["id"]]
@@ -50,7 +50,8 @@ for ln in LINES:
         keyed = keyed or is_key
         wl.append({"w": w, "t": round(t + d * acc / tot * 0.95, 3), "key": is_key})
         acc += k
-    sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln.get("ar") or ln.get("tr"), "words": wl})
+    if "stamp" in ln: stamps.append(t + ln["stamp"])
+    sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln.get("ar") or ln.get("tr"), "words": wl, "stamp": ln.get("stamp")})
     t += d + 0.35
     prev_scene = sc
 
@@ -96,6 +97,13 @@ def pluck(f, d=1.2):
 
 for s in scenes[1:]:
     put(s["start"] - 0.25, whoosh(), 0.45)
+def thump():
+    kk = np.arange(int(0.7 * SR)) / SR
+    body = np.sin(2 * np.pi * (45 + 120 * np.exp(-kk * 25)) * kk) * np.exp(-kk * 6)
+    crack = rng.standard_normal(len(kk)) * np.exp(-kk * 40) * 0.5
+    return (body + crack).astype("float32")
+for st in stamps:
+    put(st, thump(), 0.9)
 # soft "piano" motif: one pluck per sentence start, gentle minor arpeggio
 notes = [220.0, 261.6, 329.6, 392.0, 329.6, 261.6]
 for i, s in enumerate(sents):

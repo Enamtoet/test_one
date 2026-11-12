@@ -76,3 +76,13 @@ Build: `make_voice.py` with `story_ff_lines.json` → `build_story2.py --lines s
 Caption (IT):
 "Sono cresciuta in una factory" 😳 3 falsi amici che TUTTI gli italiani sbagliano in inglese 🇬🇧 Quale sbagliavi tu? 👇
 #inglese #falsiamici #imparareinglese #ingleseperitaliani #learnenglish #fyp
+
+## Episode 8 (cinqueminuti): "One word cost Luca a job" (`one-word-job-voice.mp4` / `one-word-job-music.mp4`, 47 s)
+Built for retention: narration starts at 0.0 s, the first sentence is fully visible on frame 1, a red REJECTED stamp
+slams at 1 s (with a hit sound), then an open loop ("Guess which one, before the end") with three mystery cards that stay
+on screen and flip ✓ ✓ ✗ as the story goes. False friends: sensible, parents, eventually (the real culprit, revealed last).
+Build: `make_voice.py` with `story_job_lines.json` → `build_story2.py --lines story_job_lines.json --t0 0.05` (add `--no-voice`) → `render_frames.js story_job.html` → ffmpeg.
+
+Caption (IT):
+Una parola gli è costata il lavoro 😳 Indovina quale prima della fine 👀 1, 2 o 3?
+#inglese #falsiamici #colloquiodilavoro #imparareinglese #ingleseperitaliani #fyp
