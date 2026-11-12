@@ -67,3 +67,12 @@ Build: `make_voice.py` with `story_en_lines.json` → `build_story2.py --lines s
 Caption (IT):
 10 anni di inglese a scuola… e a Londra non riesci a dire una parola? 😶 Il problema non sei tu. 🇬🇧
 #inglese #imparareinglese #ingleseperitaliani #learnenglish #englishtips #fyp
+
+## Episode 7 (cinqueminuti): "False friends: Giulia in London" (`false-friends-voice.mp4` / `false-friends-music.mp4`, 43 s)
+Stickman style. Giulia says she grew up "in a factory" (fattoria = farm), that her "camera" is small (camera = room),
+and goes to the "library" to buy a book (libreria = bookshop). Each mistake gets a split-screen ✗/✓ explanation, then a "Part 2" teaser.
+Build: `make_voice.py` with `story_ff_lines.json` → `build_story2.py --lines story_ff_lines.json` (add `--no-voice`) → `render_frames.js story_ff.html` → ffmpeg.
+
+Caption (IT):
+"Sono cresciuta in una factory" 😳 3 falsi amici che TUTTI gli italiani sbagliano in inglese 🇬🇧 Quale sbagliavi tu? 👇
+#inglese #falsiamici #imparareinglese #ingleseperitaliani #learnenglish #fyp

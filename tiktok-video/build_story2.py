@@ -44,10 +44,11 @@ for ln in LINES:
     words = ln["text"].split()
     # word onset ~ proportional to characters before it (+ pauses after punctuation)
     weights = [len(re.sub(r"\W", "", w)) + 2 + (4 if re.search(r"[.,:?]$", w) else 0) for w in words]
-    tot = sum(weights); acc = 0; wl = []
+    tot = sum(weights); acc = 0; wl = []; keyed = False
     for w, k in zip(words, weights):
-        wl.append({"w": w, "t": round(t + d * acc / tot * 0.95, 3),
-                   "key": bool(ln.get("key")) and re.sub(r"\W", "", w).lower() == ln["key"]})
+        is_key = (not keyed) and bool(ln.get("key")) and re.sub(r"\W", "", w).lower() == ln["key"]
+        keyed = keyed or is_key
+        wl.append({"w": w, "t": round(t + d * acc / tot * 0.95, 3), "key": is_key})
         acc += k
     sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln.get("ar") or ln.get("tr"), "words": wl})
     t += d + 0.35

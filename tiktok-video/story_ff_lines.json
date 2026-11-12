@@ -1,0 +1,13 @@
+[
+ {"id":"g01","scene":"A","lang":"en","voice":"george","speed":0.92,"text":"Giulia moves to London.","tr":"Giulia si trasferisce a Londra.","key":"london"},
+ {"id":"g02","scene":"B","lang":"en","voice":"george","speed":0.92,"text":"A new friend asks her: where did you grow up?","tr":"Un nuovo amico le chiede: dove sei cresciuta?","key":"up"},
+ {"id":"g03","scene":"B","lang":"en","voice":"george","speed":0.92,"text":"She says: in a factory.","tr":"Lei risponde: in una fabbrica.","key":"factory"},
+ {"id":"g04","scene":"C","lang":"en","voice":"george","speed":0.92,"text":"She meant a farm. Fattoria is farm.","tr":"Intendeva una fattoria. Fattoria si dice farm.","key":"farm"},
+ {"id":"g05","scene":"D","lang":"en","voice":"george","speed":0.92,"text":"Then she says: my camera is very small.","tr":"Poi dice: la mia camera è molto piccola.","key":"small"},
+ {"id":"g06","scene":"E","lang":"en","voice":"george","speed":0.92,"text":"In English, camera means a camera. Your camera is a room.","tr":"In inglese, camera vuol dire fotocamera. La tua camera è una room.","key":"room"},
+ {"id":"g07","scene":"F","lang":"en","voice":"george","speed":0.92,"text":"Finally: I'm going to the library to buy a book.","tr":"Infine: vado in biblioteca a comprare un libro.","key":"book"},
+ {"id":"g08","scene":"G","lang":"en","voice":"george","speed":0.92,"text":"At a library, you borrow books. To buy one, go to a bookshop.","tr":"In biblioteca i libri si prendono in prestito. Per comprarli: bookshop, la libreria.","key":"bookshop"},
+ {"id":"g09","scene":"H","lang":"en","voice":"george","speed":0.92,"text":"Three words. Three mistakes. Everyone makes them.","tr":"Tre parole. Tre errori. Li fanno tutti.","key":"everyone"},
+ {"id":"g10","scene":"I","lang":"en","voice":"george","speed":0.92,"text":"They are called false friends.","tr":"Si chiamano falsi amici.","key":"friends"},
+ {"id":"g11","scene":"J","lang":"en","voice":"george","speed":0.9,"text":"Follow for part two.","tr":"Seguimi per la seconda parte.","key":"two"}
+]
