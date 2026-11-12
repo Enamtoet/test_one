@@ -30,3 +30,12 @@ Build: `make_voice.py` with `story_voice_lines.json` → `build_story.py` → `r
 Caption:
 أحمد قال جملة وحدة فإيطاليا… والطوبيس كامل شاف فيه 😳🚌 واش نتا كنتي غادي تقولها؟ 👇
 #تعلم_الإيطالية #ايطاليا #مغاربة_ايطاليا #عرب_ايطاليا #italiano #imparareitaliano #fyp
+
+## Episode 3 (cinematic, no voice): "3 mistakes Arabs make in Italian" (`italian-3-mistakes.mp4`, 34 s)
+Minimal premium look: dark background, film grain, Playfair Display + IBM Plex Sans Arabic, masked text reveals,
+strike-through on the wrong phrase, underline on the correct one. Sound design only (`build_pro_audio.py`).
+Build: `node render_frames.js pro.html <frames>` → ffmpeg with `-crf 20 -maxrate 10M`.
+
+Caption:
+3 أخطاء يقع فيها كل العرب في الإيطالية 🇮🇹 أيّ خطأ كنت تقع فيه؟ اكتب الرقم 👇
+#تعلم_الإيطالية #ايطاليا #عرب_ايطاليا #italiano #imparareitaliano #learnitalian
