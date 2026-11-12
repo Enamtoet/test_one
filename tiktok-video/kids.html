@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Animals speak English</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:#8fd8ff; }
+  body { font-family:'Fredoka',sans-serif; position:relative; }
+  #scene { position:absolute; inset:0; }
+  #cap { position:absolute; left:70px; right:70px; top:250px; min-height:300px; background:#fff; border-radius:48px;
+         box-shadow:0 14px 0 rgba(43,45,66,.18); padding:34px 40px 30px; text-align:center; opacity:0; }
+  #cap .tag { display:inline-block; font-weight:700; font-size:30px; letter-spacing:3px; color:#fff; padding:6px 22px; border-radius:999px; margin-bottom:14px; }
+  #cap .en { font-weight:700; font-size:74px; line-height:1.12; color:#2B2D42; }
+  #cap .it { font-weight:600; font-size:46px; line-height:1.25; color:#7B61FF; margin-top:14px; }
+  #cap.itonly .it { font-size:70px; color:#1E9E5A; margin-top:0; }
+</style>
+</head>
+<body>
+<svg id="scene" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="cap"><div class="tag"></div><div class="en"></div><div class="it"></div></div>
+<script>
+let TL;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const back = x => { const c1 = 1.8, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+const P = (t, t0, d = 0.4) => clamp((t - t0) / d);
+const INK = '#2B2D42';
+
+// ---------- background
+function bg(t) {
+  let s = `<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6EC8FF"/><stop offset="1" stop-color="#D4F3FF"/></linearGradient></defs>
+    <rect width="1080" height="1920" fill="url(#sky)"/>`;
+  // sun
+  s += `<g transform="translate(975,95) scale(.68) rotate(${t * 12})">${Array.from({ length: 12 }, (_, i) =>
+        `<rect x="-8" y="-150" width="16" height="44" rx="8" fill="#FFC93C" transform="rotate(${i * 30})"/>`).join('')}</g>
+        <g transform="translate(975,95) scale(.68) translate(-930,-120)"><circle cx="930" cy="120" r="88" fill="#FFD84D"/><circle cx="905" cy="105" r="8" fill="${INK}"/><circle cx="955" cy="105" r="8" fill="${INK}"/>
+        <path d="M900 140 q30 24 60 0" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/></g>`;
+  // clouds
+  [[120, 560, .35, 1], [700, 640, .25, .8], [380, 470, .2, .6]].forEach(([x0, y, v, sc], i) => {
+    const x = ((x0 + t * 40 * v) % 1400) - 200;
+    s += `<g transform="translate(${x},${y}) scale(${sc})" fill="#fff" opacity=".9"><circle cx="0" cy="0" r="50"/><circle cx="55" cy="-20" r="62"/><circle cx="115" cy="0" r="48"/><rect x="0" y="0" width="115" height="48" rx="20"/></g>`;
+  });
+  // hills + flowers
+  s += `<path d="M0 1500 Q270 1400 540 1470 Q810 1540 1080 1440 V1920 H0Z" fill="#7ED957"/>
+        <path d="M0 1600 Q300 1530 600 1590 Q860 1640 1080 1580 V1920 H0Z" fill="#5BC236"/>`;
+  [[90, 1650, '#FF6B9D'], [260, 1740, '#FFD93D'], [820, 1700, '#FF6B9D'], [980, 1790, '#9B7BFF'], [470, 1830, '#FFD93D']].forEach(([x, y, c], i) => {
+    const sw = Math.sin(t * 2 + i) * 4;
+    s += `<g transform="translate(${x},${y}) rotate(${sw})"><line x1="0" y1="0" x2="0" y2="50" stroke="#2E8B2E" stroke-width="6"/>
+      ${[0, 72, 144, 216, 288].map(a => `<circle cx="${Math.cos(a * Math.PI / 180) * 16}" cy="${Math.sin(a * Math.PI / 180) * 16}" r="13" fill="${c}"/>`).join('')}<circle r="10" fill="#FFF3B0"/></g>`;
+  });
+  return s;
+}
+
+// ---------- animals (origin at feet, ~380 tall)
+const eye = (x, y, blink, r = 13) => blink ? `<path d="M${x - r} ${y} q${r} ${r * .7} ${r * 2} 0" fill="none" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`
+  : `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK}"/><circle cx="${x + r * .35}" cy="${y - r * .35}" r="${r * .35}" fill="#fff"/>`;
+const cheeks = (y, dx = 55) => `<circle cx="${-dx}" cy="${y}" r="14" fill="#FF8FA3" opacity=".6"/><circle cx="${dx}" cy="${y}" r="14" fill="#FF8FA3" opacity=".6"/>`;
+const mouthO = (y, o, c = '#8B2E3B') => o > .05 ? `<ellipse cx="0" cy="${y + 6}" rx="${14 + 8 * o}" ry="${4 + 18 * o}" fill="${c}" stroke="${INK}" stroke-width="5"/>`
+  : `<path d="M-16 ${y} q16 14 32 0" fill="none" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>`;
+const ANIMAL = {
+  dog: (o, b) => `<path d="M95 -140 q60 -40 50 -100" fill="none" stroke="#B9783F" stroke-width="22" stroke-linecap="round"/>
+    <ellipse cx="0" cy="-110" rx="115" ry="95" fill="#D9A066" stroke="${INK}" stroke-width="6"/>
+    <rect x="-80" y="-40" width="40" height="40" rx="14" fill="#C68B59" stroke="${INK}" stroke-width="6"/><rect x="40" y="-40" width="40" height="40" rx="14" fill="#C68B59" stroke="${INK}" stroke-width="6"/>
+    <ellipse cx="-92" cy="-255" rx="34" ry="70" fill="#8B5A3C" stroke="${INK}" stroke-width="6" transform="rotate(18 -92 -255)"/>
+    <ellipse cx="92" cy="-255" rx="34" ry="70" fill="#8B5A3C" stroke="${INK}" stroke-width="6" transform="rotate(-18 92 -255)"/>
+    <circle cx="0" cy="-265" r="100" fill="#E8B57E" stroke="${INK}" stroke-width="6"/>
+    <ellipse cx="0" cy="-220" rx="55" ry="42" fill="#FBEBD3"/>${eye(-38, -285, b)}${eye(38, -285, b)}
+    <ellipse cx="0" cy="-242" rx="20" ry="13" fill="${INK}"/>${cheeks(-235, 70)}${mouthO(-210, o)}`,
+  cat: (o, b) => `<path d="M100 -100 q90 -20 70 -130" fill="none" stroke="#E07A2E" stroke-width="22" stroke-linecap="round"/>
+    <ellipse cx="0" cy="-105" rx="105" ry="92" fill="#F4A261" stroke="${INK}" stroke-width="6"/>
+    <path d="M-40 -170 q10 30 0 60 M0 -175 q10 30 0 60 M40 -170 q10 30 0 60" fill="none" stroke="#E07A2E" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-95 -300 L-80 -400 L-20 -350 Z M95 -300 L80 -400 L20 -350 Z" fill="#F4A261" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M-80 -320 L-75 -375 L-40 -348 Z M80 -320 L75 -375 L40 -348 Z" fill="#FF9EB5"/>
+    <circle cx="0" cy="-270" r="100" fill="#F6B26B" stroke="${INK}" stroke-width="6"/>
+    ${eye(-40, -285, b, 14)}${eye(40, -285, b, 14)}<path d="M-12 -250 h24 l-12 14 z" fill="#FF7A9A"/>
+    <g stroke="${INK}" stroke-width="4" stroke-linecap="round"><line x1="-40" y1="-238" x2="-110" y2="-250"/><line x1="-40" y1="-228" x2="-110" y2="-222"/>
+      <line x1="40" y1="-238" x2="110" y2="-250"/><line x1="40" y1="-228" x2="110" y2="-222"/></g>${cheeks(-240, 66)}${mouthO(-220, o)}`,
+  duck: (o, b) => `<path d="M-60 0 l-30 10 h60 z M40 0 l-30 10 h60 z" fill="#FF8C1A" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="0" cy="-110" rx="125" ry="100" fill="#FFD93D" stroke="${INK}" stroke-width="6"/>
+    <path d="M30 -130 q70 -10 80 50 q-60 10 -80 -50z" fill="#FFC300" stroke="${INK}" stroke-width="5"/>
+    <circle cx="-20" cy="-270" r="95" fill="#FFE066" stroke="${INK}" stroke-width="6"/>
+    ${eye(-55, -295, b)}${eye(15, -295, b)}${cheeks(-255, 60).replace(/cx="55"/, 'cx="40"')}
+    <path d="M-60 -${248 - 4 * o} q-40 0 -95 ${-6} q40 -24 95 -24 z" fill="#FF8C1A" stroke="${INK}" stroke-width="5" stroke-linejoin="round" transform="translate(40,0)"/>
+    <path d="M-60 -246 q-40 ${4 + 30 * o} -90 ${4 + 18 * o} q40 ${-10} 90 ${-4}z" fill="#FF7A00" stroke="${INK}" stroke-width="5" stroke-linejoin="round" transform="translate(40,${4 + 6 * o})"/>`,
+  cow: (o, b) => `<rect x="-95" y="-50" width="40" height="50" rx="12" fill="#fff" stroke="${INK}" stroke-width="6"/><rect x="55" y="-50" width="40" height="50" rx="12" fill="#fff" stroke="${INK}" stroke-width="6"/>
+    <ellipse cx="0" cy="-115" rx="140" ry="100" fill="#fff" stroke="${INK}" stroke-width="6"/>
+    <ellipse cx="-60" cy="-140" rx="35" ry="25" fill="${INK}"/><ellipse cx="70" cy="-90" rx="30" ry="22" fill="${INK}"/><ellipse cx="20" cy="-170" rx="18" ry="14" fill="${INK}"/>
+    <path d="M-60 -345 q-30 -40 -10 -70 M60 -345 q30 -40 10 -70" fill="none" stroke="#E8C77D" stroke-width="18" stroke-linecap="round"/>
+    <ellipse cx="-115" cy="-300" rx="40" ry="20" fill="#fff" stroke="${INK}" stroke-width="6" transform="rotate(-20 -115 -300)"/>
+    <ellipse cx="115" cy="-300" rx="40" ry="20" fill="#fff" stroke="${INK}" stroke-width="6" transform="rotate(20 115 -300)"/>
+    <ellipse cx="0" cy="-280" rx="95" ry="90" fill="#fff" stroke="${INK}" stroke-width="6"/><ellipse cx="35" cy="-320" rx="28" ry="22" fill="${INK}"/>
+    ${eye(-38, -300, b)}${eye(38, -300, b).replace('fill="#2B2D42"', 'fill="#2B2D42"')}
+    <ellipse cx="0" cy="-225" rx="70" ry="45" fill="#F7B2C4" stroke="${INK}" stroke-width="6"/><circle cx="-22" cy="-232" r="8" fill="${INK}"/><circle cx="22" cy="-232" r="8" fill="${INK}"/>
+    ${mouthO(-205, o)}<circle cx="0" cy="-158" r="22" fill="#FFC93C" stroke="${INK}" stroke-width="5"/>`,
+  rooster: (o, b) => `<line x1="-30" y1="-40" x2="-35" y2="0" stroke="#FF8C1A" stroke-width="10"/><line x1="30" y1="-40" x2="35" y2="0" stroke="#FF8C1A" stroke-width="10"/>
+    <path d="M70 -130 q90 -120 60 -230 q-10 80 -60 120z" fill="#1FA67A" stroke="${INK}" stroke-width="5"/>
+    <path d="M80 -120 q110 -60 100 -170 q-30 90 -90 110z" fill="#2E7DF6" stroke="${INK}" stroke-width="5"/>
+    <path d="M80 -100 q120 0 120 -110 q-40 70 -110 70z" fill="#FF8C1A" stroke="${INK}" stroke-width="5"/>
+    <ellipse cx="0" cy="-120" rx="110" ry="95" fill="#FFF6E0" stroke="${INK}" stroke-width="6"/>
+    <circle cx="-30" cy="-385" r="26" fill="#FF3D3D" stroke="${INK}" stroke-width="5"/><circle cx="5" cy="-395" r="28" fill="#FF3D3D" stroke="${INK}" stroke-width="5"/><circle cx="38" cy="-380" r="24" fill="#FF3D3D" stroke="${INK}" stroke-width="5"/>
+    <ellipse cx="0" cy="-280" rx="85" ry="95" fill="#FFF6E0" stroke="${INK}" stroke-width="6"/>
+    ${eye(-30, -300, b)}${eye(30, -300, b)}
+    <path d="M-20 -${262 + 6 * o} l20 -14 l20 14 z" fill="#FFC300" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M-20 -258 l20 ${8 + 22 * o} l20 ${-8 - 22 * o} z" fill="#FFB000" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="0" cy="-${215 - 14 * o}" rx="16" ry="24" fill="#FF3D3D" stroke="${INK}" stroke-width="5"/>`,
+};
+function speaking(t) { return TL.speak.some(s => t >= s.t && t <= s.e); }
+function drawAnimal(type, x, y, sc, t, talk) {
+  const o = talk ? (0.5 + 0.5 * Math.abs(Math.sin(t * 16))) : 0;
+  const bob = talk ? -Math.abs(Math.sin(t * 8)) * 22 : Math.sin(t * 2.4) * 4;
+  const sq = talk ? 1 + Math.sin(t * 16) * .03 : 1;
+  const blink = (t * 0.9 + x * .01) % 3.3 < 0.12;
+  return `<g transform="translate(${x},${y + bob}) scale(${sc * sq},${sc / sq})">${ANIMAL[type](o, blink)}</g>`;
+}
+function bubble(x, y, w, h, label, flag, color, p, tail = 'left') {
+  if (p <= 0) return '';
+  const sc = .5 + .5 * back(p);
+  const tx = tail === 'left' ? w * .3 : w * .7;
+  const fs = Math.min(92, (w - 60) / (label.length * 0.62));
+  return `<g transform="translate(${x + w / 2},${y + h / 2}) scale(${sc}) translate(${-w / 2},${-h / 2})" opacity="${clamp(p * 2)}">
+    <path d="M${tx - 30} ${h - 6} L${tx + (tail === 'left' ? -10 : 10)} ${h + 70} L${tx + 30} ${h - 6} Z" fill="#fff" stroke="${color}" stroke-width="10" stroke-linejoin="round"/>
+    <rect x="0" y="0" width="${w}" height="${h}" rx="48" fill="#fff" stroke="${color}" stroke-width="10"/>
+    <rect x="${tx - 26}" y="${h - 12}" width="52" height="14" fill="#fff"/>
+    <text x="${w / 2}" y="${h / 2 + fs * .36}" font-family="Fredoka" font-weight="700" font-size="${fs}" fill="${INK}" text-anchor="middle">${label}</text>
+    <g transform="translate(${w / 2 - 95},-34)"><rect width="190" height="56" rx="28" fill="${color}"/>
+      <text x="95" y="39" font-family="Fredoka" font-weight="700" font-size="30" fill="#fff" text-anchor="middle">${flag}</text></g></g>`;
+}
+function confetti(t, t0, n = 70) {
+  if (t < t0) return '';
+  const cols = ['#FF6B9D', '#FFD93D', '#6EC8FF', '#7ED957', '#9B7BFF', '#FF8C1A'];
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const r = Math.sin(i * 12.9898) * 43758.5453, fr = r - Math.floor(r);
+    const r2 = Math.sin(i * 78.233) * 12345.678, f2 = r2 - Math.floor(r2);
+    const x = fr * 1080 + Math.sin((t - t0) * 3 + i) * 30, y = -40 + (t - t0) * (500 + f2 * 500) - f2 * 300;
+    if (y > 1950) continue;
+    s += `<rect x="${x}" y="${y}" width="18" height="30" rx="5" fill="${cols[i % 6]}" transform="rotate(${(t - t0) * 300 * (f2 - .5) + i * 40} ${x + 9} ${y + 15})"/>`;
+  }
+  return s;
+}
+
+window.setTimeline = tl => { TL = tl; window.TOTAL = tl.total; };
+window.render = function (t) {
+  let s = bg(t);
+  const seg = TL.segs.find(g => t >= g.t0 && t < g.t1) || TL.segs[TL.segs.length - 1];
+  const L = t - seg.t0, talk = speaking(t);
+  if (seg.scene === 'intro' || seg.scene === 'end') {
+    const kinds = ['dog', 'cat', 'duck', 'cow', 'rooster'];
+    kinds.forEach((k, i) => {
+      const p = P(L, 0.05 + i * 0.12, 0.45);
+      const x = 140 + i * 200, y = 1560 + (i % 2) * 70;
+      s += `<g opacity="${clamp(p * 2)}">${drawAnimal(k, x, y + (1 - back(p)) * 200, 0.48, t + i, talk && i === Math.floor(t * 2) % 5)}</g>`;
+    });
+    if (seg.scene === 'intro') {
+      s += `<text x="540" y="1000" font-family="Fredoka" font-weight="700" font-size="130" text-anchor="middle" fill="#fff" stroke="${INK}" stroke-width="10" paint-order="stroke"
+              transform="rotate(${Math.sin(t * 3) * 3} 540 960)" opacity="${P(L, 0.1)}">🇮🇹 ➜ 🇬🇧</text>`;
+    } else {
+      const p = back(P(L, 0.3, 0.5));
+      s += `<g transform="translate(540,1050) scale(${0.6 + 0.4 * p + Math.sin(t * 5) * .03})" opacity="${clamp(p)}">
+        <rect x="-330" y="-90" width="660" height="180" rx="90" fill="#FF3D6E" stroke="${INK}" stroke-width="8"/>
+        <text x="0" y="28" font-family="Fredoka" font-weight="700" font-size="84" fill="#fff" text-anchor="middle">+ FOLLOW</text></g>`;
+      s += confetti(t, seg.t0 + 0.3);
+    }
+  } else if (seg.scene === 'rooster') {
+    s += drawAnimal('rooster', 540, 1640, 0.72, t, talk);
+    s += bubble(70, 690, 560, 190, seg.it, 'ITALIANO 🇮🇹', '#1E9E5A', P(t, seg.itAt, .35), 'left');
+    const opts = [['A', 'Oink oink'], ['B', 'Cock-a-doodle-doo'], ['C', 'Tweet tweet']];
+    opts.forEach(([l, w], i) => {
+      const p = P(t, seg.opts + i * 0.15, .35); if (p <= 0) return;
+      const ok = i === 1 && t >= seg.reveal, no = i !== 1 && t >= seg.reveal;
+      const yy = 960 + i * 130;
+      s += `<g transform="translate(${(1 - back(p)) * 300},0)" opacity="${no ? .35 : clamp(p * 2)}">
+        <rect x="90" y="${yy}" width="760" height="104" rx="52" fill="${ok ? '#2BC46F' : '#fff'}" stroke="${INK}" stroke-width="7"/>
+        <circle cx="150" cy="${yy + 52}" r="34" fill="${ok ? '#fff' : '#7B61FF'}"/><text x="150" y="${yy + 66}" font-family="Fredoka" font-weight="700" font-size="40" fill="${ok ? '#2BC46F' : '#fff'}" text-anchor="middle">${l}</text>
+        <text x="210" y="${yy + 70}" font-family="Fredoka" font-weight="700" font-size="52" fill="${ok ? '#fff' : INK}">${w}${ok ? ' ✓' : ''}</text></g>`;
+    });
+    if (t >= seg.count && t < seg.reveal) {
+      const n = 3 - Math.floor(t - seg.count), f = (t - seg.count) % 1;
+      s += `<g transform="translate(960,${1080 + 130}) scale(${1.25 - 0.25 * eo(clamp(f * 4))})"><circle r="80" fill="#FFD93D" stroke="${INK}" stroke-width="8"/>
+        <text y="34" font-family="Fredoka" font-weight="700" font-size="100" fill="${INK}" text-anchor="middle">${n}</text></g>`;
+    }
+    s += confetti(t, seg.reveal, 60);
+  } else {
+    s += drawAnimal(seg.scene, 540, 1540, 1.0, t, talk);
+    s += bubble(50, 720, 470, 200, seg.it, 'ITALIANO 🇮🇹', '#1E9E5A', P(t, seg.itAt, .35), 'right');
+    s += bubble(560, 720, 470, 200, seg.en, 'ENGLISH 🇬🇧', '#2E7DF6', P(t, seg.enAt, .35), 'left');
+  }
+  document.getElementById('scene').innerHTML = s;
+  // caption card
+  const c = TL.caps.find(c => t >= c.t0 && t < c.t1), el = document.getElementById('cap');
+  if (!c) { el.style.opacity = 0; return; }
+  const p = P(t, c.t0, .25);
+  el.style.opacity = clamp(p * 2); el.style.transform = `scale(${.9 + .1 * back(p)})`;
+  el.className = c.en ? '' : 'itonly';
+  const tag = el.querySelector('.tag');
+  tag.textContent = c.en ? 'ENGLISH 🇬🇧' : 'ITALIANO 🇮🇹'; tag.style.background = c.en ? '#2E7DF6' : '#1E9E5A';
+  el.querySelector('.en').textContent = c.en || '';
+  el.querySelector('.it').textContent = c.it || '';
+};
+</script>
+</body>
+</html>

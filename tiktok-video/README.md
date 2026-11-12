@@ -86,3 +86,14 @@ Build: `make_voice.py` with `story_job_lines.json` → `build_story2.py --lines 
 Caption (IT):
 Una parola gli è costata il lavoro 😳 Indovina quale prima della fine 👀 1, 2 o 3?
 #inglese #falsiamici #colloquiodilavoro #imparareinglese #ingleseperitaliani #fyp
+
+## Episode 9 (kids 9-10, colorful): "Animals speak English too!" (`kids-animal-sounds.mp4`, 36 s)
+Bright cartoon scene (sky, sun, clouds, hills, flowers) with five original animals that bounce and open their mouths when talking.
+Italian voice (Kokoro `if_sara`) says the Italian sound, cheerful English voice (`af_heart`) says the English one:
+bau bau → woof woof, miao → meow, qua qua → quack quack, muu → moo. Quiz: rooster (chicchirichì → ?) with A/B/C options,
+3-2-1 countdown and confetti, then a "+ FOLLOW" button. Happy plucked music loop.
+Build: `make_voice.py` with `kids_lines.json` → `build_kids.py` → `render_frames.js kids.html` → ffmpeg.
+
+Caption (IT):
+Lo sapevi? Anche gli animali parlano inglese! 🐶🐱🦆🐮 E il gallo come fa? Scrivi A, B o C 👇
+#inglesepergiocare #ingleseperbambini #imparareinglese #animali #englishforkids

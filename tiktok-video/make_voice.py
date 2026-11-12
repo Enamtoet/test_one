@@ -9,8 +9,8 @@ V = {'ar':'vits-piper-ar_JO-kareem-medium/ar_JO-kareem-medium','it':'vits-piper-
      'dii':'vits-piper-ar_JO-SA_dii-high/ar_JO-SA_dii-high','miro':'vits-piper-ar_JO-SA_miro-high/ar_JO-SA_miro-high',
      'miro2':'vits-piper-ar_JO-SA_miro_V2-high/ar_JO-SA_miro_V2-high'}
 LANG = {'it':'it'}  # every other voice is Arabic
-KOKORO = {'sara': 35, 'nicola': 36, 'michael': 16, 'george': 26}  # kokoro-multi-lang-v1_0 speaker ids
-KLANG = {'sara': 'it', 'nicola': 'it', 'michael': 'en-us', 'george': 'en'}
+KOKORO = {'sara': 35, 'nicola': 36, 'michael': 16, 'george': 26, 'heart': 3}  # kokoro-multi-lang-v1_0 speaker ids
+KLANG = {'sara': 'it', 'nicola': 'it', 'michael': 'en-us', 'george': 'en', 'heart': 'en-us'}
 def mk_tts(lang):
     if lang in KOKORO:
         d=f"{M}/kokoro-multi-lang-v1_0"

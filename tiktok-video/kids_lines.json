@@ -1,0 +1,113 @@
+[
+ {
+  "id": "k01",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 1.0,
+  "text": "Animals speak English too!",
+  "tr": "Anche gli animali parlano inglese!"
+ },
+ {
+  "id": "k02",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 1.0,
+  "text": "But they sound a little different!",
+  "tr": "Ma fanno versi un po' diversi!"
+ },
+ {
+  "id": "s_dog",
+  "lang": "it",
+  "voice": "sara",
+  "speed": 0.95,
+  "text": "Il cane fa: bau bau!"
+ },
+ {
+  "id": "e_dog",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 0.95,
+  "text": "In English, the dog says: woof woof!"
+ },
+ {
+  "id": "s_cat",
+  "lang": "it",
+  "voice": "sara",
+  "speed": 0.95,
+  "text": "Il gatto fa: miao!"
+ },
+ {
+  "id": "e_cat",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 0.95,
+  "text": "In English: meow!"
+ },
+ {
+  "id": "s_duck",
+  "lang": "it",
+  "voice": "sara",
+  "speed": 0.95,
+  "text": "L'anatra fa: qua qua!"
+ },
+ {
+  "id": "e_duck",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 0.95,
+  "text": "In English: quack quack!"
+ },
+ {
+  "id": "s_cow",
+  "lang": "it",
+  "voice": "sara",
+  "speed": 0.95,
+  "text": "La mucca fa: muu!"
+ },
+ {
+  "id": "e_cow",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 0.95,
+  "text": "In English: moo!"
+ },
+ {
+  "id": "q1",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 1.0,
+  "text": "Now it's your turn! The rooster!",
+  "tr": "Ora tocca a te! Il gallo!"
+ },
+ {
+  "id": "s_roo",
+  "lang": "it",
+  "voice": "sara",
+  "speed": 0.85,
+  "text": "In italiano fa: chicchirichì!"
+ },
+ {
+  "id": "q2",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 1.0,
+  "text": "And in English?",
+  "tr": "E in inglese?"
+ },
+ {
+  "id": "ans",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 0.85,
+  "text": "Cock a doodle doo!",
+  "tr": "Chicchirichì!"
+ },
+ {
+  "id": "end",
+  "lang": "en",
+  "voice": "heart",
+  "speed": 1.0,
+  "text": "Follow for more fun English!",
+  "tr": "Seguimi per altro inglese divertente!"
+ }
+]
