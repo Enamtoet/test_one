@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>8 Italian Phrases</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --green:#00A651; --red:#E8333F; --cream:#FFF8EC; --ink:#14151A; --gold:#FFC83D; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--ink); }
+  body { font-family:'Cairo',sans-serif; color:var(--cream); position:relative; }
+
+  #bg { position:absolute; inset:0;
+        background: radial-gradient(circle at 50% 35%, #2a2d3a 0%, #14151A 70%); }
+  .blob { position:absolute; width:900px; height:900px; border-radius:50%; filter:blur(140px); opacity:.35; }
+  #b1 { background:var(--green); left:-450px; top:200px; }
+  #b2 { background:var(--red); right:-450px; top:900px; }
+
+  /* Italian flag stripe + progress */
+  #flag { position:absolute; top:0; left:0; right:0; height:22px; display:flex; direction:ltr; }
+  #flag div { flex:1; } #flag .g{background:var(--green)} #flag .w{background:#fff} #flag .r{background:var(--red)}
+  #prog { position:absolute; top:22px; left:0; height:10px; background:var(--gold); }
+
+  .scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+           justify-content:center; padding:0 110px 300px; text-align:center; opacity:0; }
+
+  /* hook */
+  #hook .num { font-family:'Poppins'; font-weight:800; font-size:420px; line-height:1;
+               background:linear-gradient(90deg,var(--green),#fff 50%,var(--red));
+               -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #hook h1 { font-weight:900; font-size:104px; line-height:1.25; margin-top:10px; }
+  #hook h2 { font-weight:700; font-size:62px; color:var(--gold); margin-top:30px; }
+
+  /* cards */
+  .counter { font-family:'Poppins'; font-weight:600; font-size:46px; letter-spacing:4px;
+             color:rgba(255,248,236,.55); margin-bottom:40px; direction:ltr; }
+  .emoji { font-size:170px; line-height:1; margin-bottom:30px; font-family:'Noto Color Emoji'; }
+  .it { font-family:'Poppins'; font-weight:800; font-size:150px; line-height:1.1; direction:ltr; color:#fff;
+        text-shadow:0 10px 40px rgba(0,0,0,.5); }
+  .it.long { font-size:118px; }
+  .pron { margin-top:44px; display:inline-flex; align-items:center; gap:22px; padding:18px 48px;
+          border-radius:999px; background:rgba(255,255,255,.1); border:3px solid rgba(255,255,255,.25);
+          font-weight:800; font-size:70px; }
+  .pron small { font-size:44px; opacity:.7; font-weight:600; }
+  .ar { margin-top:70px; font-weight:900; font-size:116px; line-height:1.2; color:var(--gold); }
+  .tip { margin-top:56px; font-weight:700; font-size:50px; line-height:1.5; padding:22px 40px; border-radius:28px;
+         background:rgba(0,166,81,.18); border-right:10px solid var(--green); max-width:860px; }
+  .tip b { font-family:'Poppins'; direction:ltr; unicode-bidi:isolate; color:#fff; }
+
+  /* quiz */
+  #quiz h3 { font-weight:900; font-size:84px; color:var(--gold); }
+  #quiz .q { font-weight:900; font-size:84px; line-height:1.35; margin-top:40px; }
+  #quiz .opts { display:flex; flex-direction:column; gap:26px; margin-top:50px; width:100%; direction:ltr; }
+  #quiz .opt { font-family:'Poppins'; font-weight:800; font-size:64px; padding:20px; border-radius:30px;
+               background:rgba(255,255,255,.08); border:4px solid rgba(255,255,255,.2); }
+  #quiz .cta { margin-top:50px; font-weight:800; font-size:66px; }
+  #quiz .follow { margin-top:30px; font-weight:700; font-size:54px; color:rgba(255,248,236,.75); }
+</style>
+</head>
+<body>
+<div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div></div>
+<div id="flag"><div class="g"></div><div class="w"></div><div class="r"></div></div>
+<div id="prog"></div>
+
+<div class="scene" id="hook">
+  <div class="num a1">8</div>
+  <h1 class="a2">كلمات إيطالية<br>ستحتاجها كل يوم 🇮🇹</h1>
+  <h2 class="a3">احفظها في 40 ثانية ⏱️</h2>
+</div>
+
+<div id="cards"></div>
+
+<div class="scene" id="quiz" style="padding-bottom:200px">
+  <h3 class="a1">اختبر نفسك 🧠</h3>
+  <div class="q a2">كيف تقول «شكراً»<br>بالإيطالية؟</div>
+  <div class="opts a3">
+    <div class="opt">A) Prego</div>
+    <div class="opt">B) Grazie</div>
+    <div class="opt">C) Ciao</div>
+  </div>
+  <div class="cta a4">اكتب جوابك في التعليقات 👇</div>
+  <div class="follow a4">تابعني لكلمات جديدة كل يوم 🇮🇹</div>
+</div>
+
+<script>
+const PHRASES = [
+  { e:'👋', it:'Ciao',            p:'تشاو',            ar:'مرحباً / مع السلامة', tip:'مع الأصدقاء فقط — ليست رسمية' },
+  { e:'☀️', it:'Buongiorno',      p:'بُونْجورنو',       ar:'صباح الخير',          tip:'في المساء نقول <b>Buonasera</b> (بُوناسيرا)' },
+  { e:'🙏', it:'Grazie',          p:'غْراتْسْيِه',       ar:'شكراً',               tip:'والرد: <b>Prego</b> (بريغو) = عفواً' },
+  { e:'🤲', it:'Per favore',      p:'بير فاڤوري',      ar:'من فضلك',             tip:'أضِفها لأي طلب لتكون مهذباً' },
+  { e:'🙋', it:'Scusi',           p:'سْكوزي',          ar:'لو سمحت / عذراً',      tip:'لتلفت انتباه شخص لا تعرفه' },
+  { e:'💶', it:'Quanto costa?',   p:'كْوانتو كوستا',   ar:'بكم هذا؟',            tip:'مفيدة جداً في السوق والمحلات' },
+  { e:'🤷', it:'Non capisco',     p:'نون كابيسكو',     ar:'لا أفهم',             tip:'وأضِف: <b>Piano, per favore</b> = ببطء من فضلك' },
+  { e:'🚻', it:'Dov\'è il bagno?', p:'دوڤيه إيل بانيو', ar:'أين الحمام؟',         tip:'<b>gn</b> تُنطق مثل «نْي»' },
+];
+
+// timeline (seconds)
+const HOOK = 3.2, CARD = 4.0, QUIZ = 5.0;
+const TOTAL = HOOK + PHRASES.length * CARD + QUIZ;
+window.TOTAL = TOTAL;
+
+const cards = document.getElementById('cards');
+PHRASES.forEach((ph, i) => {
+  const el = document.createElement('div');
+  el.className = 'scene card';
+  el.innerHTML = `
+    <div class="counter a0">${i+1} / ${PHRASES.length}</div>
+    <div class="emoji a1">${ph.e}</div>
+    <div class="it a1 ${ph.it.length > 11 ? 'long' : ''}">${ph.it}</div>
+    <div class="pron a2">🔊 ${ph.p}</div>
+    <div class="ar a3">${ph.ar}</div>
+    <div class="tip a4">💡 ${ph.tip}</div>`;
+  cards.appendChild(el);
+});
+
+const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeBack = x => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+
+// stagger delays for .a0..a4 classes
+const DELAY = { a0:0.0, a1:0.05, a2:0.55, a3:1.05, a4:1.6 };
+
+function animScene(scene, local, dur) {
+  if (local < 0 || local > dur) { scene.style.opacity = 0; return; }
+  const out = clamp((dur - local) / 0.28);           // exit fade
+  scene.style.opacity = out;
+  scene.style.transform = `translateY(${(1-out) * -60}px)`;
+  for (const k in DELAY) {
+    scene.querySelectorAll('.' + k).forEach(el => {
+      const p = clamp((local - DELAY[k]) / 0.45);
+      const big = el.classList.contains('it') || el.classList.contains('num') || el.classList.contains('emoji');
+      if (big) {
+        const s = 0.4 + 0.6 * easeBack(p);
+        el.style.transform = `scale(${s})`;
+      } else {
+        el.style.transform = `translateY(${(1 - easeOut(p)) * 70}px)`;
+      }
+      el.style.opacity = clamp(p * 1.6);
+    });
+  }
+}
+
+window.render = function (t) {
+  animScene(document.getElementById('hook'), t, HOOK);
+  document.querySelectorAll('.card').forEach((c, i) => animScene(c, t - HOOK - i*CARD, CARD));
+  const qt = t - HOOK - PHRASES.length*CARD;
+  animScene(document.getElementById('quiz'), qt, QUIZ + 1);
+  // highlight right answer near the end of quiz
+  const ok = document.querySelectorAll('#quiz .opt')[1];
+  if (qt > 3.6) { ok.style.background = 'rgba(0,166,81,.35)'; ok.style.borderColor = 'var(--green)'; }
+  else { ok.style.background = ''; ok.style.borderColor = ''; }
+
+  document.getElementById('prog').style.width = (100 * t / TOTAL) + '%';
+  document.getElementById('b1').style.transform = `translate(${Math.sin(t*0.6)*120}px, ${Math.cos(t*0.4)*160}px)`;
+  document.getElementById('b2').style.transform = `translate(${Math.cos(t*0.5)*120}px, ${Math.sin(t*0.45)*160}px)`;
+};
+render(0);
+</script>
+</body>
+</html>
