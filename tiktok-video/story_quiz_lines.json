@@ -1,0 +1,9 @@
+[
+ {"id":"q01","scene":"A","lang":"en","voice":"george","speed":0.95,"text":"Find the mistake. You have three seconds.","tr":"Trova l'errore. Hai tre secondi.","key":"mistake","pause_after":3},
+ {"id":"q02","scene":"A","lang":"en","voice":"george","speed":0.95,"text":"It's: I am twenty-five. In English, you are your age.","tr":"Si dice: I am twenty-five. In inglese l'età si «è», non si «ha».","key":"age"},
+ {"id":"q03","scene":"B","lang":"en","voice":"george","speed":0.95,"text":"Round two. Find it.","tr":"Secondo round. Trovalo.","key":"two","pause_after":3},
+ {"id":"q04","scene":"B","lang":"en","voice":"george","speed":0.95,"text":"Agree is already a verb. Just say: I agree.","tr":"Agree è già un verbo. Basta dire: I agree.","key":"verb"},
+ {"id":"q05","scene":"C","lang":"en","voice":"george","speed":0.95,"text":"Last one. This is the hardest.","tr":"Ultimo. È il più difficile.","key":"hardest","pause_after":3},
+ {"id":"q06","scene":"C","lang":"en","voice":"george","speed":0.95,"text":"People is plural. The people are nice.","tr":"People è plurale. The people are nice.","key":"plural"},
+ {"id":"q07","scene":"D","lang":"en","voice":"george","speed":0.95,"text":"How many did you get? Write your score in the comments.","tr":"Quanti ne hai indovinati? Scrivi il tuo punteggio nei commenti.","key":"comments"}
+]

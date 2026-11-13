@@ -27,7 +27,7 @@ else:
     SCENES = SCENES_DEFAULT
 scene_of = {sid: sc for sc, ids in SCENES for sid in ids}
 
-clips, sents, stamps = [], [], []
+clips, sents, stamps, ticks, reveals = [], [], [], [], []
 t = float(sys.argv[sys.argv.index("--t0") + 1]) if "--t0" in sys.argv else 0.6
 prev_scene = None
 for ln in LINES:
@@ -53,6 +53,12 @@ for ln in LINES:
     if "stamp" in ln: stamps.append(t + ln["stamp"])
     sents.append({"id": ln["id"], "scene": sc, "start": round(t, 3), "end": round(t + d, 3), "ar": ln.get("ar") or ln.get("tr"), "words": wl, "stamp": ln.get("stamp")})
     t += d + 0.35
+    if ln.get("pause_after"):          # silent countdown: one tick per second
+        for k in range(int(round(ln["pause_after"]))):
+            ticks.append(t + k)
+        sents[-1]["countdown"] = [round(t, 3), round(t + ln["pause_after"], 3)]
+        t += ln["pause_after"]
+        reveals.append(t)
     prev_scene = sc
 
 total = round(t + 1.6, 3)
@@ -104,6 +110,16 @@ def thump():
     return (body + crack).astype("float32")
 for st in stamps:
     put(st, thump(), 0.9)
+def tick():
+    kk = np.arange(int(0.12 * SR)) / SR
+    return (np.sin(2 * np.pi * 1100 * kk) * np.exp(-kk * 40)).astype("float32")
+def ding():
+    kk = np.arange(int(1.0 * SR)) / SR
+    return sum(np.sin(2 * np.pi * f * kk) * np.exp(-kk * 5) for f in (880, 1320)).astype("float32") * 0.5
+for tk in ticks:
+    put(tk, tick(), 0.7)
+for rv in reveals:
+    put(rv - 0.05, ding(), 0.5)
 # soft "piano" motif: one pluck per sentence start, gentle minor arpeggio
 notes = [220.0, 261.6, 329.6, 392.0, 329.6, 261.6]
 for i, s in enumerate(sents):

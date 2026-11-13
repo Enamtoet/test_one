@@ -97,3 +97,14 @@ Build: `make_voice.py` with `kids_lines.json` → `build_kids.py` → `render_fr
 Caption (IT):
 Lo sapevi? Anche gli animali parlano inglese! 🐶🐱🦆🐮 E il gallo come fa? Scrivi A, B o C 👇
 #inglesepergiocare #ingleseperbambini #imparareinglese #animali #englishforkids
+
+## Episode 10 (cinqueminuti): "Find the mistake: 3 seconds" (`find-the-mistake-voice.mp4` / `find-the-mistake-music.mp4`, 37 s)
+Challenge hook: frame 1 already shows a wrong sentence and a 3-second timer. Three rounds with a ticking 3-2-1 countdown,
+then the wrong word is struck in red and the correct sentence appears: I have 25 years → I am 25, I am agree → I agree,
+The people is nice → The people are nice ("the hardest"). Ends asking viewers to comment their score 0/3–3/3.
+Build: `make_voice.py` with `story_quiz_lines.json` → `build_story2.py --lines story_quiz_lines.json --t0 0.05` (add `--no-voice`) → `render_frames.js story_quiz.html` → ffmpeg.
+Lines can now take `"pause_after": 3` for a silent ticking countdown.
+
+Caption (IT):
+Trova l'errore in 3 secondi ⏱️ Il terzo è il più difficile 😏 Scrivi il tuo punteggio 👇
+#inglese #trovalerrore #imparareinglese #ingleseperitaliani #quiz #fyp
