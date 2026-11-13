@@ -256,7 +256,7 @@ const T = {
     let s = txt(540, 360, d.text, { fs: fitText(d.text, 900, d.fs || 120), w: 900, ls: 0, op: clamp(p * 1.5), extra: `style="filter:drop-shadow(0 0 18px rgba(255,255,255,.55))"` });
     if (d.sub) s += txt(540, 440, d.sub, { fs: 30, w: 700, c: MID, ls: 8, op: P(L, at(d.at || [0, 0.1], ss, sc) + 0.5, 0.4) });
     s += (d.char ? CHAR[d.char](540) : fig(540));
-    if (d.bubble) s += bigBubble(570, GY - 250, d.bubble, P(L, at(d.bubbleAt || [0, 1.2], ss, sc), 0.4), bubbleW(d.bubble));
+    if (d.bubble) { const bw = bubbleW(d.bubble); s += bigBubble(Math.min(570, 1050 - bw * BS), GY - 250, d.bubble, P(L, at(d.bubbleAt || [0, 1.2], ss, sc), 0.4), bw); }
     return s;
   },
 };

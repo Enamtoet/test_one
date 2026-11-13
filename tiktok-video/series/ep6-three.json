@@ -1,0 +1,11 @@
+{"name":"ep6-three",
+ "lines":[
+  {"id":"x01","scene":"A","text":"Italians can't say this. Try it.","tr":"Gli italiani non riescono a dirlo. Provaci.","key":"try"},
+  {"id":"x02","scene":"A","text":"Three free throws.","tr":"Tre tiri liberi.","key":"throws","speed":0.75},
+  {"id":"x03","scene":"B","text":"Now say it fast.","tr":"Ora dillo veloce.","key":"fast"},
+  {"id":"x04","scene":"B","text":"Three free throws, three free throws, three free throws!","tr":"Tre tiri liberi, tre tiri liberi, tre tiri liberi!","speed":1.2},
+  {"id":"x05","scene":"C","text":"If you said tree, comment: tree.","tr":"Se hai detto «tree», scrivi nei commenti: tree 🌳","key":"tree","stamp":0.0}],
+ "scenes":{
+  "A":{"type":"big","text":"THREE FREE THROWS","fs":110,"sub":"PROVA A DIRLO AD ALTA VOCE 👀","at":[0,-0.6]},
+  "B":{"type":"big","text":"3× FAST ⚡","fs":150,"sub":"SENZA SBAGLIARE","bubble":"Three free throws!","bubbleAt":[1,0.0]},
+  "C":{"type":"big","text":"TREE? 🌳","fs":170,"sub":"SCRIVILO NEI COMMENTI 👇","bubble":"tree free trows… 😅","bubbleAt":[0,0.3]}}}
