@@ -108,3 +108,8 @@ Lines can now take `"pause_after": 3` for a silent ticking countdown.
 Caption (IT):
 Trova l'errore in 3 secondi ⏱️ Il terzo è il più difficile 😏 Scrivi il tuo punteggio 👇
 #inglese #trovalerrore #imparareinglese #ingleseperitaliani #quiz #fyp
+
+## Hook series (cinqueminuti, 5 episodes): `ep1-boring` … `ep5-pub` (`-voice.mp4` / `-music.mp4`, 24–33 s each)
+Dark stickman style, each with a different hook type: warning, challenge, embarrassment, identity, stakes.
+Built from data with the reusable template: `python3 make_episode.py series/<name>.json <work_dir> <models_dir>`
+(`episode.html` scene types: dialog, versus, round, native, big). Captions and posting plan: `series/CAPTIONS.md`.
