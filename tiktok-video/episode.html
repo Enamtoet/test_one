@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>cinqueminuti</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:#000; }
+  body { color:#fff; font-family:'Inter',sans-serif; position:relative; }
+  #caps { position:absolute; left:80px; right:80px; top:250px; height:430px; }
+  .cap { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; opacity:0; }
+  .itl { font-weight:600; font-size:58px; line-height:1.3; direction:ltr; }
+  .itl span { display:inline-block; margin:0 .14em; }
+  .itl .key { display:block; font-weight:900; font-size:132px; letter-spacing:-2px; text-transform:uppercase; line-height:1.05; margin-top:6px;
+              text-shadow:0 0 18px rgba(255,255,255,.65), 0 0 50px rgba(255,255,255,.35); }
+  .arl { font-family:'Playfair Display'; font-style:italic; font-weight:500; font-size:46px; color:#A9A9A9; margin-top:26px; direction:ltr; }
+  #stage { position:absolute; left:0; top:700px; width:1080px; height:900px; }
+  #cta { position:absolute; left:80px; right:80px; top:1650px; text-align:center; font-family:'Inter'; font-weight:700;
+         font-size:44px; color:#fff; opacity:0; direction:ltr; }
+  #cta small { display:block; font-family:'Inter'; font-weight:600; font-size:26px; letter-spacing:8px; color:#8a8a8a; margin-top:14px; direction:ltr; }
+</style>
+</head>
+<body>
+<div id="caps"></div>
+<svg id="stage" viewBox="0 0 1080 900" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="cta">Seguimi · 5 minuti di inglese al giorno<small>SPEAK · EVERY · DAY</small></div>
+<script>
+let TL;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const eio = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2;
+const eo = x => 1 - Math.pow(1 - x, 3);
+const back = x => { const c1 = 1.6, c3 = c1 + 1; return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+const P = (L, t0, d = 0.5) => clamp((L - t0) / d);   // progress helper
+const GY = 820;                                         // ground line
+const W = '#fff', DIM = '#4a4a4a', MID = '#8a8a8a';
+
+// ---------- primitives
+function fig(x, o = {}) {
+  const c = o.dim ? DIM : W, s = o.s ?? 1, y = o.y ?? GY, op = o.op ?? 1, bob = o.bob ?? 0;
+  const g = `<g transform="translate(${x},${y + bob}) scale(${s})" opacity="${op}">
+    <circle cx="0" cy="-152" r="27" fill="${o.outline ? 'none' : c}" stroke="${c}" stroke-width="${o.outline ? 6 : 0}"/>
+    <path d="M-36 0 L-36 -82 Q-36 -116 0 -116 Q36 -116 36 -82 L36 0 Z" fill="${o.outline ? 'none' : c}" stroke="${c}" stroke-width="${o.outline ? 6 : 0}"/>
+  </g>`;
+  return g;
+}
+const txt = (x, y, s, o = {}) => `<text x="${x}" y="${y}" fill="${o.c || W}" font-family="Inter" font-weight="${o.w || 600}" font-size="${o.fs || 26}"
+   letter-spacing="${o.ls ?? 6}" text-anchor="${o.a || 'middle'}" opacity="${o.op ?? 1}" ${o.extra || ''}>${s}</text>`;
+const suitcase = (x, op = 1) => `<g opacity="${op}" transform="translate(${x},${GY})"><rect x="-26" y="-62" width="52" height="62" rx="8" fill="none" stroke="${W}" stroke-width="5"/>
+   <path d="M-10 -62 v-12 h20 v12" fill="none" stroke="${W}" stroke-width="5"/></g>`;
+function bubble(x, y, s, p, o = {}) {           // speech bubble anchored bottom-left at x,y
+  if (p <= 0) return '';
+  const w = o.w || (s.length * 24 + 50), h = 76, sc = 0.6 + 0.4 * back(p);
+  return `<g transform="translate(${x},${y}) scale(${sc})" opacity="${clamp(p * 2)}">
+    <rect x="0" y="${-h}" width="${w}" height="${h}" rx="38" fill="none" stroke="${o.c || W}" stroke-width="4"/>
+    <path d="M28 0 l-6 22 l26 -22" fill="#000" stroke="${o.c || W}" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="20" y="-4" width="40" height="8" fill="#000"/>
+    <text x="${w / 2}" y="${-h / 2 + 11}" fill="${o.c || W}" font-family="Inter" font-weight="700" font-size="32" text-anchor="middle">${s}</text></g>`;
+}
+function ring(cx, cy, r, p, label, o = {}) {
+  const C = 2 * Math.PI * r;
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2a2a2a" stroke-width="${o.sw || 10}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${W}" stroke-width="${o.sw || 10}" stroke-linecap="round"
+      stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - p)}" transform="rotate(-90 ${cx} ${cy})"/>
+    ${txt(cx, cy + (o.fs || 46) * 0.36, label, { fs: o.fs || 46, w: 800, ls: 0 })}`;
+}
+function bar(x, y, w, p, label, op = 1) {
+  return `<g opacity="${op}">${txt(x, y - 18, label, { a: 'start', fs: 22 })}${txt(x + w, y - 18, Math.round(p * 100) + '%', { a: 'end', fs: 22 })}
+    <rect x="${x}" y="${y}" width="${w}" height="14" rx="7" fill="#2a2a2a"/><rect x="${x}" y="${y}" width="${w * p}" height="14" rx="7" fill="${W}"/></g>`;
+}
+const divider = op => `<line x1="540" y1="40" x2="540" y2="${GY}" stroke="#555" stroke-width="3" stroke-dasharray="10 14" opacity="${op}"/>`;
+const cols = (op, la = 1, ra = 1) => txt(270, 70, 'IL PRIMO', { op: op * la, fs: 28, w: 700 }) + txt(810, 70, 'IL SECONDO', { op: op * ra, fs: 28, w: 700 });
+const icon = {
+  medico: (x, y) => `<circle cx="${x}" cy="${y}" r="44" fill="none" stroke="${W}" stroke-width="5"/><path d="M${x-8} ${y-24}h16v16h16v16h-16v16h-16v-16h-16v-16h16z" fill="${W}"/>`,
+  comune: (x, y) => `<path d="M${x-46} ${y-14} L${x} ${y-44} L${x+46} ${y-14} Z" fill="none" stroke="${W}" stroke-width="5"/>
+     ${[-30,-10,10,30].map(d => `<rect x="${x+d-5}" y="${y-8}" width="10" height="40" fill="${W}"/>`).join('')}<rect x="${x-48}" y="${y+34}" width="96" height="8" fill="${W}"/>`,
+  lavoro: (x, y) => `<rect x="${x-46}" y="${y-24}" width="92" height="64" rx="10" fill="none" stroke="${W}" stroke-width="5"/>
+     <path d="M${x-16} ${y-24} v-14 h32 v14" fill="none" stroke="${W}" stroke-width="5"/><line x1="${x-46}" y1="${y+2}" x2="${x+46}" y2="${y+2}" stroke="${W}" stroke-width="5"/>`,
+  book: (x, y) => `<path d="M${x} ${y} q-34 -16 -64 0 v-56 q30 -16 64 0 z M${x} ${y} q34 -16 64 0 v-56 q-30 -16 -64 0 z" fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"/>`,
+  phone: (x, y) => `<rect x="${x-14}" y="${y-26}" width="28" height="48" rx="6" fill="none" stroke="${W}" stroke-width="4"/>`,
+  star: (x, y, r = 22) => { let d = ''; for (let i = 0; i < 10; i++) { const a = Math.PI / 5 * i - Math.PI / 2, rr = i % 2 ? r * .45 : r;
+      d += (i ? 'L' : 'M') + (x + rr * Math.cos(a)).toFixed(1) + ' ' + (y + rr * Math.sin(a)).toFixed(1); } return `<path d="${d}Z" fill="${W}"/>`; },
+};
+
+// ---------- scenes (English episode: "Marco froze")
+const hat = (x, y = GY) => `<g transform="translate(${x},${y})"><rect x="-40" y="-188" width="80" height="12" rx="6" fill="${W}"/><path d="M-26 -186 Q-26 -226 0 -226 Q26 -226 26 -186 Z" fill="${W}"/></g>`;
+const xmark = (x, y, r, op = 1) => `<g opacity="${op}" stroke="${W}" stroke-width="10" stroke-linecap="round"><line x1="${x-r}" y1="${y-r}" x2="${x+r}" y2="${y+r}"/><line x1="${x+r}" y1="${y-r}" x2="${x-r}" y2="${y+r}"/></g>`;
+const check = (x, y, s, op = 1) => `<path d="M${x-s} ${y} l${s*.7} ${s*.7} l${s*1.4} ${-s*1.5}" fill="none" stroke="${W}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`;
+function vbar(x, p, label, op = 1) {
+  const h = 420 * p;
+  return `<g opacity="${op}"><rect x="${x-70}" y="${GY-20-420}" width="140" height="420" rx="16" fill="none" stroke="#333" stroke-width="4"/>
+    <rect x="${x-70}" y="${GY-20-h}" width="140" height="${h}" rx="16" fill="${W}"/>
+    ${txt(x, GY - 470, Math.round(p * 100) + '%', { fs: 44, w: 900, ls: 0 })}${txt(x, 80, label, { fs: 28, w: 700 })}</g>`;
+}
+function waves(x, y, L, op = 1) {
+  let s = '';
+  for (let i = 0; i < 3; i++) {
+    const p = ((L * 1.2 + i / 3) % 1), r = 30 + p * 90;
+    s += `<path d="M${x + r * .5} ${y - r * .8} A ${r} ${r} 0 0 1 ${x + r * .5} ${y + r * .8}" fill="none" stroke="${W}" stroke-width="6" stroke-linecap="round" opacity="${(1 - p) * op}"/>`;
+  }
+  return s;
+}
+function spinner(x, y, L, op) {
+  const a = (L * 360 * 1.3) % 360;
+  return `<g opacity="${op}" transform="rotate(${a} ${x} ${y})"><circle cx="${x}" cy="${y}" r="34" fill="none" stroke="#333" stroke-width="8"/>
+    <path d="M${x} ${y - 34} A 34 34 0 0 1 ${x + 34} ${y}" fill="none" stroke="${W}" stroke-width="8" stroke-linecap="round"/></g>`;
+}
+
+// ---------- scenes (false friends: "Giulia in London")
+const girl = (x, o = {}) => `<g opacity="${o.op ?? 1}" transform="translate(0,${o.bob ?? 0})"><ellipse cx="${x + 34}" cy="${GY - 138}" rx="15" ry="36" transform="rotate(-18 ${x + 34} ${GY - 138})" fill="${o.dim ? DIM : W}"/></g>` + fig(x, o);
+const label2 = (x, y, a, b) => txt(x, y, a, { fs: 30, w: 800 }) + txt(x, y + 40, b, { fs: 22, w: 600, c: MID, ls: 4 });
+const ico = {
+  factory: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5"><path d="M${x-90} ${y+60} V${y-10} l50 -30 v30 l50 -30 v30 l50 -30 V${y+60} Z"/>
+      <rect x="${x+60}" y="${y-110}" width="26" height="90"/></g><g fill="${W}" opacity=".7"><circle cx="${x+73}" cy="${y-130}" r="12"/><circle cx="${x+92}" cy="${y-152}" r="16"/><circle cx="${x+118}" cy="${y-176}" r="20"/></g>`,
+  farm: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"><path d="M${x-80} ${y+60} V${y-20} L${x} ${y-80} L${x+80} ${y-20} V${y+60} Z"/>
+      <rect x="${x-30}" y="${y+5}" width="60" height="55"/><path d="M${x-30} ${y+5} l60 55 M${x+30} ${y+5} l-60 55"/></g>`,
+  camera: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5"><rect x="${x-80}" y="${y-40}" width="160" height="100" rx="16"/><path d="M${x-30} ${y-40} l12 -24 h36 l12 24"/>
+      <circle cx="${x}" cy="${y+10}" r="30"/></g><circle cx="${x+55}" cy="${y-20}" r="6" fill="${W}"/>`,
+  bed: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"><path d="M${x-90} ${y-40} V${y+60} M${x+90} ${y+10} V${y+60} M${x-90} ${y+30} H${x+90}"/>
+      <rect x="${x-90}" y="${y-5}" width="180" height="35" rx="8"/><rect x="${x-80}" y="${y-30}" width="50" height="25" rx="8"/></g>`,
+  library: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5"><path d="M${x-95} ${y-30} L${x} ${y-85} L${x+95} ${y-30} Z"/>
+      ${[-60,-20,20,60].map(d => `<line x1="${x+d}" y1="${y-20}" x2="${x+d}" y2="${y+50}"/>`).join('')}<line x1="${x-100}" y1="${y+60}" x2="${x+100}" y2="${y+60}"/></g>`,
+  shop: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5"><rect x="${x-85}" y="${y-30}" width="170" height="90"/>
+      <path d="M${x-95} ${y-30} l20 -45 h150 l20 45"/>${[-60,-20,20,60].map(d => `<path d="M${x+d-20} ${y-30} q20 22 40 0"/>`).join('')}</g>
+      ${txt(x, y + 40, '£', { fs: 50, w: 900, ls: 0 })}`,
+};
+function versus(L, ts, left, right) {      // left = wrong, right = right
+  let s = divider(1);
+  s += `<g opacity="${P(L, 0.1)}">${left.icon}</g>` + label2(270, 470, left.a, left.b);
+  s += xmark(270, 560, 26, P(L, 0.7, 0.3));
+  const r = P(L, right.t ?? 1.0, 0.4);
+  s += `<g opacity="${r}">${right.icon}</g><g opacity="${r}">${label2(810, 470, right.a, right.b)}</g>`;
+  s += check(810, 570, 26, P(L, (right.t ?? 1.0) + 0.4, 0.3));
+  return s;
+}
+const RED = '#E5484D';
+const boss = x => fig(x) + `<path d="M${x} ${GY - 114} l-10 14 l10 52 l10 -52 z" fill="#000"/>`;
+const desk = () => `<rect x="600" y="${GY - 62}" width="320" height="62" fill="#000" stroke="${W}" stroke-width="5"/><line x1="580" y1="${GY - 62}" x2="940" y2="${GY - 62}" stroke="${W}" stroke-width="8"/>`;
+const office = (o = {}) => fig(330, o) + boss(760) + desk();
+function stamp(p, label = 'REJECTED', op = 1) {
+  if (p <= 0) return '';
+  const sc = 1.9 - 0.9 * eo(p);
+  return `<g opacity="${clamp(p * 3) * op}" transform="translate(540,300) rotate(-12) scale(${sc})">
+    <rect x="-300" y="-80" width="600" height="160" rx="18" fill="rgba(0,0,0,.6)" stroke="${RED}" stroke-width="14"/>
+    <text x="0" y="40" fill="${RED}" font-family="Inter" font-weight="900" font-size="112" text-anchor="middle" letter-spacing="4">${label}</text></g>`;
+}
+function card(x, y, w, h, state, lab = '') {
+  const c = state === 'X' ? RED : W, f = state === '?' ? 'none' : (state === 'X' ? 'rgba(229,72,77,.15)' : 'rgba(255,255,255,.08)');
+  const inner = state === '?' ? txt(x, y + h * 0.18, '?', { fs: h * 0.5, w: 900, ls: 0 })
+              : state === 'OK' ? check(x, y, h * 0.16) : xmark(x, y, h * 0.14);
+  return `<rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="${h * 0.12}" fill="${f}" stroke="${c}" stroke-width="5"/>
+    ${state === 'X' ? `<g>${inner.replace(/stroke="#fff"/g, `stroke="${RED}"`)}</g>` : inner}
+    ${lab ? txt(x, y + h / 2 + 40, lab, { fs: 22, w: 700, c: state === 'X' ? RED : MID, ls: 4 }) : ''}`;
+}
+const icons2 = {
+  bulb: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5"><circle cx="${x}" cy="${y - 20}" r="50"/><path d="M${x - 22} ${y + 34} h44 M${x - 18} ${y + 50} h36"/><path d="M${x - 14} ${y - 10} l14 22 l14 -22"/></g>`,
+  heart: (x, y) => `<path d="M${x} ${y + 50} C${x - 90} ${y - 10} ${x - 50} ${y - 80} ${x} ${y - 40} C${x + 50} ${y - 80} ${x + 90} ${y - 10} ${x} ${y + 50} Z" fill="none" stroke="${W}" stroke-width="5"/>`,
+  people: (x, y, n) => { let s = ''; const cols = Math.min(n, 3);
+    for (let i = 0; i < n; i++) { const cx = x + ((i % cols) - (cols - 1) / 2) * 56, cy = y + Math.floor(i / cols) * 70 - (n > 3 ? 35 : 0);
+      s += `<circle cx="${cx}" cy="${cy - 22}" r="12" fill="${W}"/><path d="M${cx - 16} ${cy + 22} v-18 q0 -12 16 -12 q16 0 16 12 v18 z" fill="${W}"/>`; } return s; },
+  hourglass: (x, y) => `<g fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"><path d="M${x - 45} ${y - 70} h90 M${x - 45} ${y + 70} h90 M${x - 35} ${y - 70} q0 50 35 70 q-35 20 -35 70 M${x + 35} ${y - 70} q0 50 -35 70 q35 20 35 70"/></g><path d="M${x - 20} ${y + 66} q20 -30 40 0 z" fill="${W}"/>`,
+  ifneed: (x, y) => `<circle cx="${x}" cy="${y}" r="62" fill="none" stroke="${W}" stroke-width="5"/>${txt(x, y + 30, '?', { fs: 90, w: 900, ls: 0 })}`,
+};
+function pair(L, left, right, tRight, marks = true) {
+  let s = divider(1);
+  s += `<g opacity="${P(L, 0.1)}">${left.icon}</g>` + `<g opacity="${P(L, 0.1)}">${label2(270, 470, left.a, left.b)}</g>`;
+  const r = P(L, tRight, 0.4);
+  s += `<g opacity="${r}">${right.icon}</g><g opacity="${r}">${label2(810, 470, right.a, right.b)}</g>`;
+  if (marks) { s += xmark(270, 570, 26, P(L, 0.8, 0.3)); s += check(810, 580, 26, P(L, tRight + 0.4, 0.3)); }
+  return s;
+}
+// ===== generic episode engine: scenes come from TL.spec[sceneId] =====
+const barman = x => fig(x) + `<path d="M${x} ${GY - 108} l-16 -9 v18 z M${x} ${GY - 108} l16 -9 v18 z" fill="#000"/><path d="M${x - 26} ${GY - 80} h52 v62 h-52z" fill="none" stroke="#000" stroke-width="5"/>`;
+const CHAR = { boy: x => fig(x), girl: x => girl(x), hat: x => fig(x) + hat(x), boss: x => boss(x), barman: x => barman(x), book: x => fig(x) + `<g transform="translate(${x + 40},${GY - 80})">${icon.book(0, 0).replace(/stroke-width="5"/g, 'stroke-width="4"')}</g>` };
+function at(spec, ss, sc) {           // [sentenceIndex, offset | 'end']
+  if (spec == null) return 0;
+  const s = ss[Math.min(spec[0], ss.length - 1)];
+  return (spec[1] === 'end' ? s.end : s.start + (spec[1] || 0)) - sc.start;
+}
+const mctx = () => (window._m ||= document.createElement('canvas').getContext('2d'));
+function fitText(str, maxW, fs, weight = 900) { const c = mctx(); c.font = `${weight} ${fs}px Inter`; let f = fs; while (c.measureText(str).width > maxW && f > 24) { f -= 2; c.font = `${weight} ${f}px Inter`; } return f; }
+const BS = 1.45;
+const bigBubble = (x, y, text, p, w) => `<g transform="translate(${x},${y}) scale(${BS}) translate(${-x},${-y})">${bubble(x, y, text, p, { w })}</g>`;
+function bubbleW(text) { const c = mctx(); c.font = '700 32px Inter'; return c.measureText(text).width + 60; }
+const T = {
+  dialog(d, L, ss, sc) {
+    let s = '';
+    if (d.label) s += txt(540, 110, d.label, { fs: 30, w: 700, ls: 14, op: P(L, 0.05) });
+    s += CHAR[d.left || 'boy'](330) + CHAR[d.right || 'girl'](760);
+    if (d.desk) s += desk();
+    for (const b of d.bubbles || []) {
+      const t0 = at(b.at, ss, sc), t1 = b.until ? at(b.until, ss, sc) : 1e9;
+      const p = P(L, t0, 0.4) * (1 - P(L, t1, 0.3));
+      const w = bubbleW(b.text), WW = w * BS;
+      const x = b.who === 'L' ? Math.max(30, 330 - WW * 0.25) : Math.min(1050 - WW, 760 - WW * 0.75);
+      s += bigBubble(x, GY - (b.high ? 380 : 250), b.text, p, w);
+    }
+    for (const r of d.react || []) {
+      const p = P(L, at(r.at, ss, sc), 0.3); if (p <= 0) continue;
+      const x = r.who === 'L' ? 245 : 845;
+      s += txt(x, GY - 120 - 20 * (1 - back(p)), r.text, { fs: 84, w: 900, ls: 0, op: clamp(p * 2) });
+    }
+    if (d.stamp) s += stamp(P(L, at(d.stamp.at, ss, sc), 0.18), d.stamp.text, d.stamp.until ? 1 - P(L, at(d.stamp.until, ss, sc), 0.3) : 1);
+    return s;
+  },
+  versus(d, L, ss, sc) {
+    let s = divider(1);
+    const side = (x, o, p, mark) => {
+      if (p <= 0) return '';
+      let lines = [o.a];
+      if (o.a.length > 16) { const words = o.a.split(' '); let best = 1, diff = 1e9;
+        for (let k = 1; k < words.length; k++) { const d = Math.abs(words.slice(0, k).join(' ').length - words.slice(k).join(' ').length); if (d < diff) { diff = d; best = k; } }
+        lines = [words.slice(0, best).join(' '), words.slice(best).join(' ')]; }
+      const fs = Math.min(...lines.map(l => fitText(l, 490, 76)));
+      let g = `<g opacity="${p}" transform="translate(0,${(1 - eo(p)) * 30})">`;
+      lines.forEach((l, i) => { g += txt(x, 330 - (lines.length - 1) * fs * 0.55 + i * fs * 1.1, l, { fs, w: 900, ls: 0 }); });
+      g += txt(x, 395 + (lines.length - 1) * fs * 0.3, o.b, { fs: 26, w: 700, c: MID, ls: 4 });
+      if (mark === 'x') g += xmark(x, 520, 30, P(L, at(d.markAt || [0, 1.0], ss, sc), 0.3));
+      if (mark === 'v') g += check(x, 530, 30, P(L, (d.rightAt ? at(d.rightAt, ss, sc) : 1.2) + 0.4, 0.3));
+      return g + '</g>';
+    };
+    s += txt(270, 70, d.leftLabel || '', { fs: 26, w: 700, c: MID, op: P(L, 0.05) }) + txt(810, 70, d.rightLabel || '', { fs: 26, w: 700, op: P(L, 0.05) });
+    s += side(270, d.left, P(L, 0.1, 0.4), d.marks === false ? '' : 'x');
+    s += side(810, d.right, P(L, d.rightAt ? at(d.rightAt, ss, sc) : 1.2, 0.4), d.marks === false ? '' : 'v');
+    if (d.foot) s += txt(540, 680, d.foot, { fs: 34, w: 800, ls: 4, op: P(L, at(d.footAt || [0, 'end'], ss, sc), 0.4) });
+    return s;
+  },
+  round(d, L, ss, sc) {             // translate challenge: Italian prompt -> English answer
+    const cd = ss[0].countdown ? ss[0].countdown.map(x => x - sc.start) : [2.5, 5.5];
+    const reveal = cd[1];
+    let s = roundDots(d.n, L >= reveal);
+    const fs = fitText(d.prompt, 820, 84, 800);
+    s += `<rect x="80" y="170" width="920" height="200" rx="30" fill="#0d0d0d" stroke="${L >= reveal ? '#333' : W}" stroke-width="5"/>
+          ${txt(540, 300, d.prompt, { fs, w: 800, ls: 0 })}${txt(540, 205, 'ITALIANO', { fs: 22, w: 700, c: MID, ls: 8 })}`;
+    const f = P(L, reveal + 0.1, 0.4);
+    if (f > 0) s += `<g opacity="${f}" transform="translate(0,${(1 - eo(f)) * 30})"><rect x="80" y="410" width="920" height="150" rx="75" fill="${W}"/>
+        ${txt(510, 508, d.answer, { fs: fitText(d.answer, 740, 64), w: 900, ls: 0, c: '#000' })}${check(935, 485, 18).replace(/stroke="#fff"/g, 'stroke="#000"')}</g>`;
+    if (d.wrong && L >= reveal + 0.9) s += `<g opacity="${P(L, reveal + 0.9, 0.4)}">${txt(540, 640, d.wrong, { fs: 40, w: 700, c: MID, ls: 0 })}</g>` + strike(540, 628, d.wrong, 40, P(L, reveal + 1.2, 0.4));
+    s += countdown(L, cd[0], cd[1]);
+    s += fig(540);
+    if (L < reveal) s += txt(540, GY - 210 - Math.abs(Math.sin(L * 4)) * 10, '?', { fs: 80, w: 900, ls: 0, op: P(L, 0.2) });
+    return s;
+  },
+  native(d, L, ss, sc) {
+    let s = divider(0.6) + txt(270, 140, 'TEXTBOOK', { fs: 26, w: 700, c: MID, op: P(L, 0.05) }) + txt(810, 140, 'NATIVE', { fs: 26, w: 700, op: P(L, 0.05) });
+    d.rows.forEach((r, i) => {
+      const y = 240 + i * 115, pl = P(L, at(r.at, ss, sc), 0.35), pr = P(L, at(r.rat || r.at, ss, sc) + (r.rat ? 0 : 1.2), 0.35);
+      if (pl > 0) s += `<g opacity="${pl}">${txt(270, y, r.book, { fs: fitText(r.book, 460, 42, 600), w: 600, c: MID, ls: 0 })}</g>`;
+      if (pr > 0) s += `<g opacity="${pr}" transform="translate(${(1 - eo(pr)) * 30},0)">${txt(810, y, r.native, { fs: fitText(r.native, 460, 54, 900), w: 900, ls: 0 })}</g>`;
+    });
+    s += CHAR.book(270) + fig(810);
+    return s;
+  },
+  big(d, L, ss, sc) {
+    const p = P(L, at(d.at || [0, 0.1], ss, sc), 0.5);
+    let s = txt(540, 360, d.text, { fs: fitText(d.text, 900, d.fs || 120), w: 900, ls: 0, op: clamp(p * 1.5), extra: `style="filter:drop-shadow(0 0 18px rgba(255,255,255,.55))"` });
+    if (d.sub) s += txt(540, 440, d.sub, { fs: 30, w: 700, c: MID, ls: 8, op: P(L, at(d.at || [0, 0.1], ss, sc) + 0.5, 0.4) });
+    s += (d.char ? CHAR[d.char](540) : fig(540));
+    if (d.bubble) s += bigBubble(570, GY - 250, d.bubble, P(L, at(d.bubbleAt || [0, 1.2], ss, sc), 0.4), bubbleW(d.bubble));
+    return s;
+  },
+};
+function strike(cx, y, str, fs, p) { const c = mctx(); c.font = `700 ${fs}px Inter`; const w = c.measureText(str).width; return p > 0 ? `<line x1="${cx - w / 2 - 6}" y1="${y}" x2="${cx - w / 2 - 6 + (w + 12) * eio(p)}" y2="${y}" stroke="${RED}" stroke-width="7" stroke-linecap="round"/>` : ''; }
+function roundDots(cur, done) {
+  let s = txt(540, 60, 'ROUND', { fs: 24, w: 700, c: MID, ls: 10 });
+  [1, 2, 3].forEach(i => { const x = 460 + (i - 1) * 80, on = i === cur, ok = i < cur || (i === cur && done);
+    s += `<circle cx="${x}" cy="105" r="26" fill="${ok ? W : 'none'}" stroke="${on || ok ? W : '#444'}" stroke-width="4"/>${txt(x, 115, i, { fs: 26, w: 800, ls: 0, c: ok ? '#000' : (on ? W : '#555') })}`; });
+  return s;
+}
+function countdown(L, c0, c1) {
+  if (L > c1 + 0.2) return '';
+  const p = clamp((L - c0) / (c1 - c0)), n = Math.max(1, 3 - Math.floor(L - c0)), f = (L - c0) % 1;
+  const pulse = L >= c0 ? 1.15 - 0.15 * eo(clamp(f * 4)) : 1;
+  return `<g transform="translate(800,${GY - 110}) scale(${pulse * 0.85})">${ring(0, 0, 80, 1 - p, L < c0 ? '3' : String(n), { fs: 80, sw: 12 })}</g>`;
+}
+const SC = new Proxy({}, { get: (_, id) => (L, ts, wt, ss, sc) => { const d = TL.spec[id]; return T[d.type](d, L, ss, sc); } });
+
+window.setTimeline = tl => {
+  TL = tl; window.TOTAL = tl.total;
+  const box = document.getElementById('caps');
+  box.innerHTML = tl.sentences.map(s => `<div class="cap" id="c_${s.id}"><div class="itl">${
+     s.words.map((w, i) => `<span data-i="${i}" class="${w.key ? 'key' : ''}">${w.w}</span>`).join('')}</div><div class="arl">${s.ar}</div></div>`).join('');
+};
+
+window.render = function (t) {
+  // captions
+  for (const s of TL.sentences) {
+    const el = document.getElementById('c_' + s.id);
+    if ((t < s.start - 0.15 && s !== TL.sentences[0]) || t > s.hold) { el.style.opacity = 0; continue; }
+    const out = clamp((s.hold - t) / 0.22);
+    el.style.opacity = out; el.style.filter = out < 1 ? `blur(${(1 - out) * 10}px)` : '';
+    el.querySelectorAll('.itl span').forEach(sp => {
+      const w = s.words[+sp.dataset.i], p = s === TL.sentences[0] ? 1 : clamp((t - w.t + 0.05) / 0.22);
+      sp.style.opacity = p;
+      sp.style.filter = p < 1 ? `blur(${(1 - p) * 8}px)` : '';
+      sp.style.transform = w.key ? `scale(${0.7 + 0.3 * back(p)})` : `translateY(${(1 - eo(p)) * 14}px)`;
+    });
+    const ar = el.querySelector('.arl'); const pa = s === TL.sentences[0] ? 1 : clamp((t - s.start - 0.25) / 0.4);
+    ar.style.opacity = pa; ar.style.transform = `translateY(${(1 - eo(pa)) * 16}px)`;
+  }
+  // stage
+  let svg = `<line x1="0" y1="${GY}" x2="1080" y2="${GY}" stroke="#fff" stroke-width="3" opacity=".9"/>`;
+  for (const sc of TL.scenes) {
+    if (t < sc.start || t > sc.end) continue;
+    const L = t - sc.start;
+    const ss = TL.sentences.filter(s => s.scene === sc.id);
+    const ts = ss.map(s => s.start - sc.start), wt = ss.map(s => s.words.map(w => w.t - sc.start));
+    const fin = sc.start === 0 ? 1 : clamp(L / 0.3), fout = clamp((sc.end - t) / 0.3);
+    svg += `<g opacity="${Math.min(fin, fout)}" style="filter:blur(${(1 - Math.min(fin, fout)) * 6}px)">${SC[sc.id](L, ts, wt, ss, sc)}</g>`;
+  }
+    document.getElementById('stage').innerHTML = svg;
+  const c = clamp((t - (TL.total - 2.6)) / 0.5);
+  document.getElementById('cta').style.opacity = c;
+};
+</script>
+</body>
+</html>

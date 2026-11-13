@@ -1,0 +1,16 @@
+{"name":"ep1-boring",
+ "lines":[
+  {"id":"b01","scene":"A","text":"Never say this at a party in London.","tr":"Non dirlo mai a una festa a Londra.","key":"never"},
+  {"id":"b02","scene":"A","text":"Luca wanted to say: I'm not having fun.","tr":"Luca voleva dire: non mi sto divertendo.","key":"fun"},
+  {"id":"b03","scene":"A","text":"But I'm boring means: I am a boring person.","tr":"Ma «I'm boring» vuol dire: sono una persona noiosa.","key":"person"},
+  {"id":"b04","scene":"B","text":"Boring is what you are. Bored is how you feel.","tr":"Boring è come sei. Bored è come ti senti.","key":"feel"},
+  {"id":"b05","scene":"C","text":"Same trap with exciting.","tr":"Stessa trappola con exciting.","key":"trap"},
+  {"id":"b06","scene":"C","text":"I'm so exciting means: I'm an amazing person.","tr":"«I'm so exciting» vuol dire: sono una persona fantastica.","key":"amazing"},
+  {"id":"b07","scene":"D","text":"When you can't wait, say: I'm so excited!","tr":"Quando non vedi l'ora, di': I'm so excited!","key":"excited"},
+  {"id":"b08","scene":"E","text":"Follow, and never sound boring again.","tr":"Seguimi, e non sembrerai mai più noioso.","key":"again"}],
+ "scenes":{
+  "A":{"type":"dialog","label":"PARTY · LONDON","left":"boy","right":"girl","bubbles":[{"who":"L","text":"I'm so boring!","at":[0,-0.4]}],"react":[{"who":"R","text":"😬","at":[2,0.9]}]},
+  "B":{"type":"versus","leftLabel":"COME SEI","rightLabel":"COME TI SENTI","left":{"a":"BORING","b":"NOIOSO"},"right":{"a":"BORED","b":"ANNOIATO"},"rightAt":[0,1.7],"marks":false},
+  "C":{"type":"dialog","left":"boy","right":"girl","bubbles":[{"who":"L","text":"I'm so exciting!","at":[0,0.6]}],"react":[{"who":"R","text":"🙄","at":[1,1.2]}]},
+  "D":{"type":"versus","left":{"a":"I'M SO EXCITING","b":"SONO FANTASTICO"},"right":{"a":"I'M SO EXCITED","b":"NON VEDO L'ORA"},"markAt":[0,0.6],"rightAt":[0,1.6]},
+  "E":{"type":"big","text":"-ING ≠ -ED","sub":"BORING · BORED · EXCITING · EXCITED"}}}

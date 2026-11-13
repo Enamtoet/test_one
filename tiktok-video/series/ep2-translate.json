@@ -1,0 +1,14 @@
+{"name":"ep2-translate",
+ "lines":[
+  {"id":"t01","scene":"A","text":"Translate this before the timer ends.","tr":"Traducilo prima che finisca il tempo.","key":"timer","pause_after":3},
+  {"id":"t02","scene":"A","text":"I'm hungry. Not: I have hunger.","tr":"I'm hungry. Non «I have hunger».","key":"hungry"},
+  {"id":"t03","scene":"B","text":"Round two. Be quick.","tr":"Secondo round. Sii veloce.","key":"quick","pause_after":3},
+  {"id":"t04","scene":"B","text":"I'm right. In English, you don't have reason.","tr":"I'm right. In inglese la ragione non si «ha».","key":"right"},
+  {"id":"t05","scene":"C","text":"Last one. This one tricks everyone.","tr":"Ultimo. Questo inganna tutti.","key":"everyone","pause_after":3},
+  {"id":"t06","scene":"C","text":"I'm sleepy. Not: I have sleep.","tr":"I'm sleepy. Non «I have sleep».","key":"sleepy"},
+  {"id":"t07","scene":"D","text":"What's your score? Write it in the comments.","tr":"Qual è il tuo punteggio? Scrivilo nei commenti.","key":"comments"}],
+ "scenes":{
+  "A":{"type":"round","n":1,"prompt":"Ho fame.","answer":"I'm hungry.","wrong":"I have hunger"},
+  "B":{"type":"round","n":2,"prompt":"Ho ragione.","answer":"I'm right.","wrong":"I have reason"},
+  "C":{"type":"round","n":3,"prompt":"Ho sonno.","answer":"I'm sleepy.","wrong":"I have sleep"},
+  "D":{"type":"big","text":"?/3","fs":200,"sub":"SCRIVI IL TUO PUNTEGGIO","bubble":"0, 1, 2 o 3? 👇","bubbleAt":[0,1.0]}}}

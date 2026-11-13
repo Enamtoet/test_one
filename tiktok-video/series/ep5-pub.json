@@ -1,0 +1,15 @@
+{"name":"ep5-pub",
+ "lines":[
+  {"id":"p01","scene":"A","text":"Say this in a British pub, and the barman stares at you.","tr":"Dillo in un pub inglese, e il barista ti fissa.","key":"stares"},
+  {"id":"p02","scene":"A","text":"Give me a beer sounds rude.","tr":"«Give me a beer» suona maleducato.","key":"rude"},
+  {"id":"p03","scene":"B","text":"Say: can I get a pint, please?","tr":"Di': can I get a pint, please?","key":"pint"},
+  {"id":"p04","scene":"B","text":"A pint is the normal size of a beer in the UK.","tr":"La pinta è la misura normale della birra nel Regno Unito.","key":"size"},
+  {"id":"p05","scene":"C","text":"When he gives it to you, say: cheers!","tr":"Quando te la dà, di': cheers!","key":"cheers"},
+  {"id":"p06","scene":"D","text":"In the UK, cheers also means thank you.","tr":"Nel Regno Unito, cheers vuol dire anche grazie.","key":"thank"},
+  {"id":"p07","scene":"E","text":"Follow for part two: ordering food.","tr":"Seguimi per la parte due: ordinare da mangiare.","key":"two"}],
+ "scenes":{
+  "A":{"type":"dialog","label":"🍺 PUB · LONDON","left":"boy","right":"barman","desk":true,"bubbles":[{"who":"L","text":"Give me a beer.","at":[0,-0.4]}],"react":[{"who":"R","text":"😐","at":[0,2.0]}]},
+  "B":{"type":"versus","left":{"a":"GIVE ME A BEER.","b":"DAMMI UNA BIRRA"},"right":{"a":"CAN I GET A PINT, PLEASE?","b":"POSSO AVERE UNA PINTA?"},"markAt":[0,0.2],"rightAt":[0,0.5],"foot":"1 PINT = 568 ml","footAt":[1,0.5]},
+  "C":{"type":"dialog","left":"boy","right":"barman","desk":true,"bubbles":[{"who":"R","text":"Here you go.","at":[0,0.1]},{"who":"L","text":"Cheers!","at":[0,1.7],"high":true}]},
+  "D":{"type":"big","text":"CHEERS = THANKS","sub":"NON SOLO «SALUTE» 🍻"},
+  "E":{"type":"big","text":"PART 2","fs":170,"sub":"ORDINARE DA MANGIARE"}}}

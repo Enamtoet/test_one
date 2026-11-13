@@ -1,0 +1,14 @@
+{"name":"ep3-hot",
+ "lines":[
+  {"id":"h01","scene":"A","text":"Italians say this in summer, and the English laugh.","tr":"Gli italiani lo dicono d'estate, e gli inglesi ridono.","key":"laugh"},
+  {"id":"h02","scene":"A","text":"Thirty-five degrees. Luca says: I'm so hot!","tr":"Trentacinque gradi. Luca dice: I'm so hot!","key":"hot"},
+  {"id":"h03","scene":"A","text":"His friend says: yes, you are!","tr":"La sua amica: «Sì, lo sei!»","key":"are"},
+  {"id":"h04","scene":"B","text":"I'm hot means: I'm attractive.","tr":"«I'm hot» vuol dire: sono attraente.","key":"attractive"},
+  {"id":"h05","scene":"B","text":"For the weather, say: it's so hot today.","tr":"Per il caldo, di': it's so hot today.","key":"today"},
+  {"id":"h06","scene":"C","text":"Or, if you're melting: I'm boiling!","tr":"Oppure, se ti stai sciogliendo: I'm boiling!","key":"boiling"},
+  {"id":"h07","scene":"D","text":"Follow for more mistakes that make the English laugh.","tr":"Seguimi per altri errori che fanno ridere gli inglesi.","key":"laugh"}],
+ "scenes":{
+  "A":{"type":"dialog","label":"☀️ 35°C","left":"boy","right":"girl","bubbles":[{"who":"L","text":"I'm so hot!","at":[0,-0.4],"until":[2,0.2]},{"who":"R","text":"Yes, you are! 😏","at":[2,0.5]}],"react":[{"who":"L","text":"😳","at":[2,1.4]}]},
+  "B":{"type":"versus","leftLabel":"PERSONA","rightLabel":"TEMPO","left":{"a":"I'M HOT","b":"SONO ATTRAENTE"},"right":{"a":"IT'S HOT","b":"FA CALDO"},"markAt":[0,1.2],"rightAt":[1,0.4]},
+  "C":{"type":"big","text":"I'M BOILING!","sub":"STO BOLLENDO 🥵"},
+  "D":{"type":"big","text":"FOLLOW","sub":"CINQUEMINUTI · INGLESE OGNI GIORNO"}}}

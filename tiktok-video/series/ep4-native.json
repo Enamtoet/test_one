@@ -1,0 +1,15 @@
+{"name":"ep4-native",
+ "lines":[
+  {"id":"n01","scene":"A","text":"You speak English like a textbook. Natives don't.","tr":"Parli inglese come un libro di scuola. I madrelingua no.","key":"textbook"},
+  {"id":"n02","scene":"A","text":"You say: can you repeat, please? They say: sorry?","tr":"Tu dici: can you repeat, please? Loro: sorry?","key":"sorry"},
+  {"id":"n03","scene":"A","text":"You say: I have understood. They say: got it.","tr":"Tu: I have understood. Loro: got it.","key":"got"},
+  {"id":"n04","scene":"A","text":"You say: I'm fine, thank you, and you? They say: not bad, you?","tr":"Tu: I'm fine, thank you, and you? Loro: not bad, you?","key":"bad"},
+  {"id":"n05","scene":"A","text":"You say: goodbye. They say: see you!","tr":"Tu: goodbye. Loro: see you!","key":"see"},
+  {"id":"n06","scene":"B","text":"Which ones do you still use? Tell me in the comments.","tr":"Quali usi ancora? Dimmelo nei commenti.","key":"comments"}],
+ "scenes":{
+  "A":{"type":"native","rows":[
+     {"book":"Can you repeat, please?","native":"Sorry?","at":[1,0.3],"rat":[1,2.4]},
+     {"book":"I have understood.","native":"Got it.","at":[2,0.3],"rat":[2,2.1]},
+     {"book":"I'm fine, thank you, and you?","native":"Not bad, you?","at":[3,0.3],"rat":[3,3.0]},
+     {"book":"Goodbye.","native":"See you!","at":[4,0.3],"rat":[4,1.5]}]},
+  "B":{"type":"big","text":"WHICH ONES?","sub":"DIMMELO NEI COMMENTI 👇"}}}
