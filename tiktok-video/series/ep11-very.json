@@ -1,0 +1,121 @@
+{
+ "name": "ep11-very",
+ "lines": [
+  {
+   "id": "v01",
+   "scene": "A",
+   "text": "Stop saying very. Sound smarter instantly.",
+   "tr": "Smetti di dire very. Sembrerai subito più bravo.",
+   "key": "smarter"
+  },
+  {
+   "id": "v02",
+   "scene": "B",
+   "text": "Very tired: exhausted.",
+   "tr": "Very tired → exhausted (esausto).",
+   "key": "exhausted"
+  },
+  {
+   "id": "v03",
+   "scene": "B",
+   "text": "Very hungry: starving.",
+   "tr": "Very hungry → starving (affamato).",
+   "key": "starving"
+  },
+  {
+   "id": "v04",
+   "scene": "B",
+   "text": "Very big: huge.",
+   "tr": "Very big → huge (enorme).",
+   "key": "huge"
+  },
+  {
+   "id": "v05",
+   "scene": "B",
+   "text": "Very good: amazing.",
+   "tr": "Very good → amazing (fantastico).",
+   "key": "amazing"
+  },
+  {
+   "id": "v06",
+   "scene": "C",
+   "text": "Save it, and use one today.",
+   "tr": "Salvalo, e usane uno oggi.",
+   "key": "today"
+  }
+ ],
+ "scenes": {
+  "A": {
+   "type": "big",
+   "text": "STOP «VERY» ✋",
+   "fs": 130,
+   "sub": "SUONA PIÙ NATURALE",
+   "at": [
+    0,
+    -0.6
+   ]
+  },
+  "B": {
+   "type": "native",
+   "leftLabel": "INVECE DI",
+   "rightLabel": "DI'",
+   "rows": [
+    {
+     "book": "very tired",
+     "native": "exhausted",
+     "at": [
+      0,
+      0.0
+     ],
+     "rat": [
+      0,
+      0.9
+     ]
+    },
+    {
+     "book": "very hungry",
+     "native": "starving",
+     "at": [
+      1,
+      0.0
+     ],
+     "rat": [
+      1,
+      0.9
+     ]
+    },
+    {
+     "book": "very big",
+     "native": "huge",
+     "at": [
+      2,
+      0.0
+     ],
+     "rat": [
+      2,
+      0.7
+     ]
+    },
+    {
+     "book": "very good",
+     "native": "amazing",
+     "at": [
+      3,
+      0.0
+     ],
+     "rat": [
+      3,
+      0.8
+     ]
+    }
+   ],
+   "big": true
+  },
+  "C": {
+   "type": "big",
+   "text": "SALVA 📌",
+   "fs": 170,
+   "sub": "E USANE UNO OGGI"
+  }
+ }
+}

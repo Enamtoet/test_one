@@ -1,0 +1,11 @@
+{"name":"ep10-idioms",
+ "lines":[
+  {"id":"i01","scene":"A","text":"What does this mean? Three seconds.","tr":"Cosa vuol dire? Tre secondi.","key":"mean","pause_after":3},
+  {"id":"i02","scene":"A","text":"It means: it's raining a lot.","tr":"Vuol dire: piove a dirotto.","key":"lot"},
+  {"id":"i03","scene":"B","text":"And this one?","tr":"E questa?","key":"one","pause_after":3},
+  {"id":"i04","scene":"B","text":"It means: good luck!","tr":"Vuol dire: in bocca al lupo!","key":"luck"},
+  {"id":"i05","scene":"C","text":"Your score? Comment zero, one or two.","tr":"Il tuo punteggio? Scrivi zero, uno o due.","key":"comment"}],
+ "scenes":{
+  "A":{"type":"round","n":1,"of":2,"label":"ENGLISH","prompt":"It's raining cats and dogs.","answer":"Piove a dirotto.","wrong":"Piovono cani e gatti"},
+  "B":{"type":"round","n":2,"of":2,"label":"ENGLISH","prompt":"Break a leg!","answer":"In bocca al lupo!","wrong":"Rompiti una gamba"},
+  "C":{"type":"big","text":"?/2","fs":200,"sub":"SCRIVI IL TUO PUNTEGGIO","bubble":"0, 1 o 2? 👇","bubbleAt":[0,1.0]}}}

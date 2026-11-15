@@ -228,10 +228,10 @@ const T = {
   round(d, L, ss, sc) {             // translate challenge: Italian prompt -> English answer
     const cd = ss[0].countdown ? ss[0].countdown.map(x => x - sc.start) : [2.5, 5.5];
     const reveal = cd[1];
-    let s = roundDots(d.n, L >= reveal);
+    let s = roundDots(d.n, L >= reveal, d.of || 3);
     const fs = fitText(d.prompt, 820, 84, 800);
     s += `<rect x="80" y="170" width="920" height="200" rx="30" fill="#0d0d0d" stroke="${L >= reveal ? '#333' : W}" stroke-width="5"/>
-          ${txt(540, 300, d.prompt, { fs, w: 800, ls: 0 })}${txt(540, 205, 'ITALIANO', { fs: 22, w: 700, c: MID, ls: 8 })}`;
+          ${txt(540, 300, d.prompt, { fs, w: 800, ls: 0 })}${txt(540, 205, d.label || 'ITALIANO', { fs: 22, w: 700, c: MID, ls: 8 })}`;
     const f = P(L, reveal + 0.1, 0.4);
     if (f > 0) s += `<g opacity="${f}" transform="translate(0,${(1 - eo(f)) * 30})"><rect x="80" y="410" width="920" height="150" rx="75" fill="${W}"/>
         ${txt(510, 508, d.answer, { fs: fitText(d.answer, 740, 64), w: 900, ls: 0, c: '#000' })}${check(935, 485, 18).replace(/stroke="#fff"/g, 'stroke="#000"')}</g>`;
@@ -242,11 +242,11 @@ const T = {
     return s;
   },
   native(d, L, ss, sc) {
-    let s = divider(0.6) + txt(270, 140, 'TEXTBOOK', { fs: 26, w: 700, c: MID, op: P(L, 0.05) }) + txt(810, 140, 'NATIVE', { fs: 26, w: 700, op: P(L, 0.05) });
+    let s = divider(0.6) + txt(270, 140, d.leftLabel || 'TEXTBOOK', { fs: 26, w: 700, c: MID, op: P(L, 0.05) }) + txt(810, 140, d.rightLabel || 'NATIVE', { fs: 26, w: 700, op: P(L, 0.05) });
     d.rows.forEach((r, i) => {
-      const y = 240 + i * 115, pl = P(L, at(r.at, ss, sc), 0.35), pr = P(L, at(r.rat || r.at, ss, sc) + (r.rat ? 0 : 1.2), 0.35);
-      if (pl > 0) s += `<g opacity="${pl}">${txt(270, y, r.book, { fs: fitText(r.book, 460, 42, 600), w: 600, c: MID, ls: 0 })}</g>`;
-      if (pr > 0) s += `<g opacity="${pr}" transform="translate(${(1 - eo(pr)) * 30},0)">${txt(810, y, r.native, { fs: fitText(r.native, 460, 54, 900), w: 900, ls: 0 })}</g>`;
+      const y = 240 + i * (d.big ? 125 : 115), pl = P(L, at(r.at, ss, sc), 0.35), pr = P(L, at(r.rat || r.at, ss, sc) + (r.rat ? 0 : 1.2), 0.35);
+      if (pl > 0) s += `<g opacity="${pl}">${txt(270, y, r.book, { fs: fitText(r.book, 460, d.big ? 58 : 42, 600), w: 600, c: MID, ls: 0 })}</g>`;
+      if (pr > 0) s += `<g opacity="${pr}" transform="translate(${(1 - eo(pr)) * 30},0)">${txt(810, y, r.native, { fs: fitText(r.native, 460, d.big ? 78 : 54, 900), w: 900, ls: 0 })}</g>`;
     });
     s += CHAR.book(270) + fig(810);
     return s;
@@ -261,9 +261,9 @@ const T = {
   },
 };
 function strike(cx, y, str, fs, p) { const c = mctx(); c.font = `700 ${fs}px Inter`; const w = c.measureText(str).width; return p > 0 ? `<line x1="${cx - w / 2 - 6}" y1="${y}" x2="${cx - w / 2 - 6 + (w + 12) * eio(p)}" y2="${y}" stroke="${RED}" stroke-width="7" stroke-linecap="round"/>` : ''; }
-function roundDots(cur, done) {
+function roundDots(cur, done, of = 3) {
   let s = txt(540, 60, 'ROUND', { fs: 24, w: 700, c: MID, ls: 10 });
-  [1, 2, 3].forEach(i => { const x = 460 + (i - 1) * 80, on = i === cur, ok = i < cur || (i === cur && done);
+  Array.from({ length: of }, (_, k) => k + 1).forEach(i => { const x = 540 + (i - (of + 1) / 2) * 80, on = i === cur, ok = i < cur || (i === cur && done);
     s += `<circle cx="${x}" cy="105" r="26" fill="${ok ? W : 'none'}" stroke="${on || ok ? W : '#444'}" stroke-width="4"/>${txt(x, 115, i, { fs: 26, w: 800, ls: 0, c: ok ? '#000' : (on ? W : '#555') })}`; });
   return s;
 }

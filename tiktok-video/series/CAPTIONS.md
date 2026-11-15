@@ -48,3 +48,45 @@ Dillo in un pub inglese e il barista ti fissa 😐🍺 Come si ordina davvero un
 One episode a day, in this order: 2 → 1 → 3 → 5 → 4. The challenge first, because it gets the most comments.
 After 2–3 days, check **TikTok Studio → Analytics → Retention** and tell Claude which hook kept people longest.
 More episodes in that hook style can then be built quickly with `make_episode.py`.
+
+---
+
+# Reach set (5 short episodes, 14–21 s): built for replays, comments and saves
+
+## Ep. 7: "You say it wrong" (`ep7-nike`)
+**Hook:** "Italians say this brand wrong every day." + **NIKE**
+```
+Lo pronunci sbagliato da sempre 😳 Nike e Ikea in inglese si dicono così 🇬🇧 Lo sapevi? Sì o no 👇
+#inglese #pronuncia #nike #ikea #imparareinglese #losapevi #fyp
+```
+
+## Ep. 8: Pronunciation challenge (`ep8-squirrel`)
+**Hook:** "This word breaks every Italian accent." + **SQUIRREL 🐿️**
+```
+La parola che distrugge l'accento italiano 🐿️ Dilla 3 volte veloce e scrivi quanti tentativi 👇
+#inglese #pronuncia #squirrel #sfida #imparareinglese #ingleseperitaliani #fyp
+```
+
+## Ep. 9: Common mistake (`ep9-borrow`)
+**Hook:** "This sentence makes English teachers cry." + *"Can you borrow me a pen?"*
+```
+Questa frase fa piangere i prof d'inglese 😭 Borrow o lend? Salvalo 📌
+#inglese #erroriinglese #imparareinglese #ingleseperitaliani #grammaticainglese #fyp
+```
+
+## Ep. 10: Guess the meaning (`ep10-idioms`)
+**Hook:** "What does this mean? Three seconds." + *"It's raining cats and dogs."* + ⏱️
+```
+Cosa vuol dire? Hai 3 secondi ⏱️ Scrivi il tuo punteggio 👇
+#inglese #modididire #idioms #quiz #imparareinglese #ingleseperitaliani #fyp
+```
+
+## Ep. 11: Upgrade list (`ep11-very`)
+**Hook:** "Stop saying very. Sound smarter instantly."
+```
+Smetti di dire "very" ✋ 4 parole per sembrare subito più bravo in inglese 🇬🇧 Salvalo 📌
+#inglese #vocabolario #imparareinglese #ingleseperitaliani #englishvocabulary #fyp
+```
+
+**Order:** 8 → 7 → 10 → 9 → 11 (challenge first, then surprise, then quiz, then save-worthy).
+**Tip:** reply to the best comments with a new video ("Reply with video"). TikTok pushes those strongly.

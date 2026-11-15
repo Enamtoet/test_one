@@ -1,0 +1,12 @@
+{"name":"ep9-borrow",
+ "lines":[
+  {"id":"l01","scene":"A","text":"This sentence makes English teachers cry.","tr":"Questa frase fa piangere i professori d'inglese.","key":"cry"},
+  {"id":"l02","scene":"B","text":"Borrow means: take. Lend means: give.","tr":"Borrow vuol dire prendere in prestito. Lend vuol dire prestare.","key":"give"},
+  {"id":"l03","scene":"B","text":"So say: can you lend me a pen?","tr":"Quindi di': can you lend me a pen?","key":"lend"},
+  {"id":"l04","scene":"C","text":"Or: can I borrow your pen?","tr":"Oppure: can I borrow your pen?","key":"borrow"},
+  {"id":"l05","scene":"D","text":"Save this before you forget it.","tr":"Salvalo prima di dimenticarlo.","key":"save"}],
+ "scenes":{
+  "A":{"type":"dialog","label":"ENGLISH CLASS","left":"boy","right":"book","bubbles":[{"who":"L","text":"Can you borrow me a pen?","at":[0,-0.4]}],"react":[{"who":"R","text":"😭","at":[0,1.6]}]},
+  "B":{"type":"versus","left":{"a":"BORROW","b":"PRENDERE IN PRESTITO"},"right":{"a":"LEND","b":"PRESTARE"},"marks":false,"rightAt":[0,1.6],"foot":"CAN YOU LEND ME A PEN? ✓","footAt":[1,0.6]},
+  "C":{"type":"dialog","left":"boy","right":"girl","bubbles":[{"who":"L","text":"Can I borrow your pen?","at":[0,0.2]},{"who":"R","text":"Sure!","at":[0,1.9],"high":true}]},
+  "D":{"type":"big","text":"SALVA 📌","fs":170,"sub":"PER NON DIMENTICARLO"}}}

@@ -1,0 +1,100 @@
+{
+ "name": "ep7-nike",
+ "lines": [
+  {
+   "id": "r01",
+   "scene": "A",
+   "text": "Italians say this brand wrong every day.",
+   "tr": "Gli italiani sbagliano questo marchio ogni giorno.",
+   "key": "wrong"
+  },
+  {
+   "id": "r02",
+   "scene": "B",
+   "text": "Not Naik.",
+   "tr": "Non «Naik».",
+   "key": "naik"
+  },
+  {
+   "id": "r03",
+   "scene": "B",
+   "text": "It's Nye-kee.",
+   "tr": "Si dice «Nai-ki».",
+   "key": "nyekee"
+  },
+  {
+   "id": "r04",
+   "scene": "C",
+   "text": "And Ikea? Eye-kee-ah.",
+   "tr": "E Ikea? «Ai-kì-a».",
+   "key": "eyekeeah"
+  },
+  {
+   "id": "r05",
+   "scene": "D",
+   "text": "Did you know? Comment yes or no.",
+   "tr": "Lo sapevi? Scrivi sì o no nei commenti.",
+   "key": "comment"
+  }
+ ],
+ "scenes": {
+  "A": {
+   "type": "big",
+   "text": "NIKE",
+   "fs": 240,
+   "sub": "COME SI PRONUNCIA? 🤔",
+   "at": [
+    0,
+    -0.6
+   ]
+  },
+  "B": {
+   "type": "versus",
+   "leftLabel": "COME DICIAMO NOI",
+   "rightLabel": "COME DICONO LORO",
+   "left": {
+    "a": "NAIK",
+    "b": "SBAGLIATO"
+   },
+   "right": {
+    "a": "NYE-KEE",
+    "b": "NAI-KI"
+   },
+   "markAt": [
+    0,
+    0.2
+   ],
+   "rightAt": [
+    1,
+    0.1
+   ]
+  },
+  "C": {
+   "type": "versus",
+   "leftLabel": "COME DICIAMO NOI",
+   "rightLabel": "COME DICONO LORO",
+   "left": {
+    "a": "I-KE-A",
+    "b": "SBAGLIATO"
+   },
+   "right": {
+    "a": "EYE-KEE-AH",
+    "b": "AI-KÌ-A"
+   },
+   "markAt": [
+    0,
+    0.5
+   ],
+   "rightAt": [
+    0,
+    1.2
+   ]
+  },
+  "D": {
+   "type": "big",
+   "text": "SÌ O NO? 👇",
+   "fs": 150,
+   "sub": "LO SAPEVI?"
+  }
+ }
+}

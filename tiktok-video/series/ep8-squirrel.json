@@ -1,0 +1,11 @@
+{"name":"ep8-squirrel",
+ "lines":[
+  {"id":"s01","scene":"A","text":"This word breaks every Italian accent.","tr":"Questa parola distrugge ogni accento italiano.","key":"accent"},
+  {"id":"s02","scene":"A","text":"Squirrel.","tr":"Squirrel: scoiattolo.","key":"squirrel","speed":0.7},
+  {"id":"s03","scene":"B","text":"Now say it three times. Fast.","tr":"Ora dillo tre volte. Veloce.","key":"fast"},
+  {"id":"s04","scene":"B","text":"Squirrel, squirrel, squirrel.","tr":"Squirrel, squirrel, squirrel.","speed":1.1},
+  {"id":"s05","scene":"C","text":"How many tries did it take you? Comment.","tr":"Quanti tentativi ti sono serviti? Scrivilo.","key":"comment"}],
+ "scenes":{
+  "A":{"type":"big","text":"SQUIRREL 🐿️","fs":150,"sub":"SCOIATTOLO · PROVA A DIRLO","at":[0,-0.6]},
+  "B":{"type":"big","text":"3× ⚡","fs":200,"sub":"SENZA SBAGLIARE","bubble":"Squirrel, squirrel…","bubbleAt":[1,0.0]},
+  "C":{"type":"big","text":"1? 5? 20? 👇","fs":150,"sub":"QUANTI TENTATIVI?"}}}
