@@ -1,0 +1,156 @@
+{
+ "name": "lesson2-saw-seen",
+ "lines": [
+  {
+   "id": "p01",
+   "scene": "A",
+   "text": "Italians mix these two up every day.",
+   "tr": "Gli italiani confondono questi due ogni giorno.",
+   "key": "two"
+  },
+  {
+   "id": "p02",
+   "scene": "B",
+   "text": "If you say when, use the past simple.",
+   "tr": "Se dici quando, usa il past simple.",
+   "key": "when"
+  },
+  {
+   "id": "p03",
+   "scene": "B",
+   "text": "If the time doesn't matter, use the present perfect.",
+   "tr": "Se il momento non conta, usa il present perfect.",
+   "key": "perfect"
+  },
+  {
+   "id": "p04",
+   "scene": "C",
+   "text": "I saw that film yesterday.",
+   "tr": "Ho visto quel film ieri.",
+   "key": "yesterday"
+  },
+  {
+   "id": "p05",
+   "scene": "C",
+   "text": "I've already seen that film.",
+   "tr": "Ho già visto quel film.",
+   "key": "already"
+  },
+  {
+   "id": "p06",
+   "scene": "C",
+   "text": "Have you ever been to London?",
+   "tr": "Sei mai stato a Londra?",
+   "key": "ever"
+  },
+  {
+   "id": "p07",
+   "scene": "D",
+   "text": "Your turn. Translate this.",
+   "tr": "Tocca a te. Traducilo.",
+   "key": "turn",
+   "pause_after": 3
+  },
+  {
+   "id": "p08",
+   "scene": "D",
+   "text": "Last year tells you when. So: I went.",
+   "tr": "«L'anno scorso» ti dice quando. Quindi: I went.",
+   "key": "went"
+  },
+  {
+   "id": "p09",
+   "scene": "E",
+   "text": "Save this. You'll need it.",
+   "tr": "Salvalo. Ti servirà.",
+   "key": "need"
+  }
+ ],
+ "scenes": {
+  "A": {
+   "type": "big",
+   "text": "SAW? HAVE SEEN?",
+   "fs": 120,
+   "sub": "«HO VISTO» IN INGLESE",
+   "at": [
+    0,
+    -0.6
+   ]
+  },
+  "B": {
+   "type": "versus",
+   "leftLabel": "C'È UN QUANDO",
+   "rightLabel": "NESSUN QUANDO",
+   "left": {
+    "a": "PAST SIMPLE",
+    "b": "IERI · NEL 2020 · L'ANNO SCORSO"
+   },
+   "right": {
+    "a": "PRESENT PERFECT",
+    "b": "GIÀ · MAI · ANCORA"
+   },
+   "marks": false,
+   "rightAt": [
+    1,
+    0.0
+   ]
+  },
+  "C": {
+   "type": "native",
+   "leftLabel": "ITALIANO",
+   "rightLabel": "ENGLISH",
+   "rows": [
+    {
+     "book": "Ho visto quel film ieri.",
+     "native": "I saw it yesterday.",
+     "at": [
+      0,
+      0.0
+     ],
+     "rat": [
+      0,
+      0.4
+     ]
+    },
+    {
+     "book": "Ho già visto quel film.",
+     "native": "I've already seen it.",
+     "at": [
+      1,
+      0.0
+     ],
+     "rat": [
+      1,
+      0.4
+     ]
+    },
+    {
+     "book": "Sei mai stato a Londra?",
+     "native": "Have you ever been?",
+     "at": [
+      2,
+      0.0
+     ],
+     "rat": [
+      2,
+      0.4
+     ]
+    }
+   ]
+  },
+  "D": {
+   "type": "round",
+   "n": 1,
+   "of": 1,
+   "prompt": "Sono andato a Roma l'anno scorso.",
+   "answer": "I went to Rome last year.",
+   "wrong": "I have gone to Rome last year"
+  },
+  "E": {
+   "type": "big",
+   "text": "QUANDO? → PAST SIMPLE",
+   "fs": 90,
+   "sub": "NESSUN QUANDO → PRESENT PERFECT · SALVA 📌"
+  }
+ }
+}

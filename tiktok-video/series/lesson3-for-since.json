@@ -1,0 +1,171 @@
+{
+ "name": "lesson3-for-since",
+ "lines": [
+  {
+   "id": "f01",
+   "scene": "A",
+   "text": "Italians say this all the time. It's wrong.",
+   "tr": "Gli italiani lo dicono sempre. È sbagliato.",
+   "key": "wrong"
+  },
+  {
+   "id": "f02",
+   "scene": "B",
+   "text": "For is a length of time.",
+   "tr": "For: una durata.",
+   "key": "length"
+  },
+  {
+   "id": "f03",
+   "scene": "B",
+   "text": "Since is a starting point.",
+   "tr": "Since: un punto di partenza.",
+   "key": "starting"
+  },
+  {
+   "id": "f04",
+   "scene": "C",
+   "text": "For five years. For two hours. Since twenty twenty. Since Monday.",
+   "tr": "Da cinque anni. Da due ore. Dal 2020. Da lunedì.",
+   "key": "monday"
+  },
+  {
+   "id": "f05",
+   "scene": "D",
+   "text": "And use have, not the present: I've lived here for five years.",
+   "tr": "E usa have, non il presente: I've lived here for five years.",
+   "key": "lived"
+  },
+  {
+   "id": "f06",
+   "scene": "E",
+   "text": "Your turn. Translate this.",
+   "tr": "Tocca a te. Traducilo.",
+   "key": "turn",
+   "pause_after": 3
+  },
+  {
+   "id": "f07",
+   "scene": "E",
+   "text": "March is a starting point. That's why we use since here.",
+   "tr": "Marzo è un punto di partenza. Per questo si usa since.",
+   "key": "since"
+  },
+  {
+   "id": "f08",
+   "scene": "F",
+   "text": "Save this, and follow for one rule a day.",
+   "tr": "Salvalo, e seguimi per una regola al giorno.",
+   "key": "save"
+  }
+ ],
+ "scenes": {
+  "A": {
+   "type": "dialog",
+   "label": "«VIVO QUI DA 5 ANNI»",
+   "left": "boy",
+   "right": "girl",
+   "bubbles": [
+    {
+     "who": "L",
+     "text": "I live here since 5 years.",
+     "at": [
+      0,
+      -0.4
+     ]
+    }
+   ],
+   "react": [
+    {
+     "who": "R",
+     "text": "😬",
+     "at": [
+      0,
+      1.6
+     ]
+    }
+   ],
+   "stamp": {
+    "text": "WRONG",
+    "at": [
+     0,
+     2.2
+    ]
+   }
+  },
+  "B": {
+   "type": "versus",
+   "leftLabel": "DURATA",
+   "rightLabel": "PUNTO DI PARTENZA",
+   "left": {
+    "a": "FOR",
+    "b": "QUANTO TEMPO?"
+   },
+   "right": {
+    "a": "SINCE",
+    "b": "DA QUANDO?"
+   },
+   "marks": false,
+   "rightAt": [
+    1,
+    0.0
+   ]
+  },
+  "C": {
+   "type": "native",
+   "big": true,
+   "leftLabel": "FOR",
+   "rightLabel": "SINCE",
+   "rows": [
+    {
+     "book": "for 5 years",
+     "native": "since 2020",
+     "at": [
+      0,
+      0.0
+     ],
+     "rat": [
+      0,
+      2.5
+     ]
+    },
+    {
+     "book": "for 2 hours",
+     "native": "since Monday",
+     "at": [
+      0,
+      1.2
+     ],
+     "rat": [
+      0,
+      3.6
+     ]
+    }
+   ]
+  },
+  "D": {
+   "type": "big",
+   "text": "I'VE LIVED HERE",
+   "fs": 120,
+   "sub": "FOR 5 YEARS · HAVE + PARTICIPIO",
+   "at": [
+    0,
+    1.6
+   ]
+  },
+  "E": {
+   "type": "round",
+   "n": 1,
+   "of": 1,
+   "prompt": "Studio inglese da marzo.",
+   "answer": "I've studied English since March.",
+   "wrong": "I study English from March"
+  },
+  "F": {
+   "type": "big",
+   "text": "FOR = DURATA",
+   "fs": 120,
+   "sub": "SINCE = PUNTO DI PARTENZA · SALVA 📌"
+  }
+ }
+}

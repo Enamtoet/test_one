@@ -90,3 +90,25 @@ Smetti di dire "very" ✋ 4 parole per sembrare subito più bravo in inglese �
 
 **Order:** 8 → 7 → 10 → 9 → 11 (challenge first, then surprise, then quiz, then save-worthy).
 **Tip:** reply to the best comments with a new video ("Reply with video"). TikTok pushes those strongly.
+
+---
+
+# Lesson set (3 mini-lessons, 32–35 s): hook → rule → examples → quiz → summary to save
+
+## Lesson 1: Make or Do? (`lesson1-make-do`)
+```
+"Fare" in inglese: MAKE o DO? 🤔 La regola in 30 secondi + test finale ⏱️ Salvalo 📌
+#inglese #grammaticainglese #makeordo #imparareinglese #ingleseperitaliani #fyp
+```
+
+## Lesson 2: Saw or Have seen? (`lesson2-saw-seen`)
+```
+"Ho visto": SAW o HAVE SEEN? 🎬 L'errore che fanno tutti gli italiani, spiegato facile 📌
+#inglese #presentperfect #pastsimple #grammaticainglese #ingleseperitaliani #fyp
+```
+
+## Lesson 3: For or Since? (`lesson3-for-since`)
+```
+"Vivo qui da 5 anni" in inglese NON è "since 5 years" 😬 FOR o SINCE? Salvalo 📌
+#inglese #forsince #grammaticainglese #imparareinglese #ingleseperitaliani #fyp
+```

@@ -1,0 +1,194 @@
+{
+ "name": "lesson1-make-do",
+ "lines": [
+  {
+   "id": "m01",
+   "scene": "A",
+   "text": "In Italian, you use one verb. In English, there are two.",
+   "tr": "In italiano usi un solo verbo: «fare». In inglese sono due.",
+   "key": "two"
+  },
+  {
+   "id": "m02",
+   "scene": "B",
+   "text": "Do is for tasks and activities.",
+   "tr": "Do: per compiti e attività.",
+   "key": "activities"
+  },
+  {
+   "id": "m03",
+   "scene": "B",
+   "text": "Make is when you create something.",
+   "tr": "Make: quando crei qualcosa.",
+   "key": "create"
+  },
+  {
+   "id": "m04",
+   "scene": "C",
+   "text": "Do your homework. Do the shopping. Do sport.",
+   "tr": "Fare i compiti. Fare la spesa. Fare sport.",
+   "key": "sport"
+  },
+  {
+   "id": "m05",
+   "scene": "D",
+   "text": "Make a cake. Make a mistake. Make a decision.",
+   "tr": "Fare una torta. Fare un errore. Prendere una decisione.",
+   "key": "decision"
+  },
+  {
+   "id": "m06",
+   "scene": "E",
+   "text": "Quick test. Translate this.",
+   "tr": "Test veloce. Traducilo.",
+   "key": "test",
+   "pause_after": 3
+  },
+  {
+   "id": "m07",
+   "scene": "E",
+   "text": "Make a mistake. You create it.",
+   "tr": "Make a mistake: l'errore lo «crei» tu.",
+   "key": "create"
+  },
+  {
+   "id": "m08",
+   "scene": "F",
+   "text": "Save this, and follow for the next rule.",
+   "tr": "Salvalo, e seguimi per la prossima regola.",
+   "key": "save"
+  }
+ ],
+ "scenes": {
+  "A": {
+   "type": "big",
+   "text": "FARE = MAKE? DO?",
+   "fs": 120,
+   "sub": "UNA REGOLA IN 40 SECONDI",
+   "at": [
+    0,
+    -0.6
+   ]
+  },
+  "B": {
+   "type": "versus",
+   "leftLabel": "REGOLA 1",
+   "rightLabel": "REGOLA 2",
+   "left": {
+    "a": "DO",
+    "b": "COMPITI · ATTIVITÀ"
+   },
+   "right": {
+    "a": "MAKE",
+    "b": "CREARE QUALCOSA"
+   },
+   "marks": false,
+   "rightAt": [
+    1,
+    0.0
+   ]
+  },
+  "C": {
+   "type": "native",
+   "big": true,
+   "leftLabel": "ITALIANO",
+   "rightLabel": "DO",
+   "rows": [
+    {
+     "book": "fare i compiti",
+     "native": "do homework",
+     "at": [
+      0,
+      0.0
+     ],
+     "rat": [
+      0,
+      0.3
+     ]
+    },
+    {
+     "book": "fare la spesa",
+     "native": "do the shopping",
+     "at": [
+      0,
+      1.3
+     ],
+     "rat": [
+      0,
+      1.6
+     ]
+    },
+    {
+     "book": "fare sport",
+     "native": "do sport",
+     "at": [
+      0,
+      2.6
+     ],
+     "rat": [
+      0,
+      2.9
+     ]
+    }
+   ]
+  },
+  "D": {
+   "type": "native",
+   "big": true,
+   "leftLabel": "ITALIANO",
+   "rightLabel": "MAKE",
+   "rows": [
+    {
+     "book": "fare una torta",
+     "native": "make a cake",
+     "at": [
+      0,
+      0.0
+     ],
+     "rat": [
+      0,
+      0.3
+     ]
+    },
+    {
+     "book": "fare un errore",
+     "native": "make a mistake",
+     "at": [
+      0,
+      1.2
+     ],
+     "rat": [
+      0,
+      1.5
+     ]
+    },
+    {
+     "book": "prendere una decisione",
+     "native": "make a decision",
+     "at": [
+      0,
+      2.4
+     ],
+     "rat": [
+      0,
+      2.7
+     ]
+    }
+   ]
+  },
+  "E": {
+   "type": "round",
+   "n": 1,
+   "of": 1,
+   "prompt": "Fare un errore.",
+   "answer": "Make a mistake.",
+   "wrong": "Do a mistake"
+  },
+  "F": {
+   "type": "big",
+   "text": "DO = FARE UN'ATTIVITÀ",
+   "fs": 90,
+   "sub": "MAKE = CREARE QUALCOSA · SALVA 📌"
+  }
+ }
+}
