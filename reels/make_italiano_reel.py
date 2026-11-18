@@ -1,7 +1,8 @@
 """Italian-for-Darija-speakers reel generator.
 
 Usage: python3 make_italiano_reel.py OUT.mp4 [--preview]
-Edit the EP dict below to make a new episode.
+Episodes live in episodes.py; pick one with REEL_EP=N (default 1).
+Optional: REEL_VO=1 adds the espeak Italian voice on the words, REEL_NO_LOGO=1 hides the watermark.
 """
 import numpy as np, subprocess, math, wave, sys, os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -11,29 +12,11 @@ FBLACK = os.path.join(HERE, "Cairo-Black.ttf")
 FSEMI = os.path.join(HERE, "Cairo-SemiBold.ttf")
 W, H, FPS = 1080, 1920, 30
 
-EP = dict(
-    hook1="إلا كنتي مغربي\nفإيطاليا...",
-    hook2="راك كتهضر الطاليانية\nبلا ما تعرف!",
-    count_txt="8 كلمات كتعرفهم من قبل",
-    label_top="فالدارجة كنقولو",
-    label_it="بالطاليانية",
-    label_pr="كيتنطق",
-    words=[
-        ("كوزينة", "CUCINA", "كوتشينا"),
-        ("سبيطار", "OSPEDALE", "أوسبيدالي"),
-        ("بانيو", "BAGNO", "بانيو"),
-        ("كاميو", "CAMION", "كاميون"),
-        ("طابلة", "TAVOLA", "تاڤولا"),
-        ("طوموبيل", "AUTOMOBILE", "أوتوموبيلي"),
-        ("فاميلا", "FAMIGLIA", "فاميليا"),
-        ("كارطة", "CARTA", "كارطا"),
-    ],
-    out1="شمن كلمة فيهم\nما كنتيش عارفها؟",
-    out2="كتبها فالكومنتير",
-    follow="تابعني",
-    follow2="باش تتعلم الطاليانية\nبالدارجة",
-    tag="EPISODIO 1",
-)
+sys.path.insert(0, HERE)
+from episodes import EPISODES  # noqa: E402
+
+EP_NUM = int(os.environ.get("REEL_EP", "1"))
+EP = EPISODES[EP_NUM]
 
 HOOK = 4.0
 CARD = 3.6
@@ -80,6 +63,12 @@ def measure(s, size, bold=True):
     bb = _D.multiline_textbbox((0, 0), s, font=f, align="center", spacing=4,
                                direction="rtl" if is_ar(s) else "ltr")
     return bb[2] - bb[0]
+
+
+def fit(s, size, maxw=W - 120, bold=True):
+    while size > 20 and measure(s, size, bold) > maxw:
+        size -= 4
+    return size
 
 
 def txt(img, s, cx, cy, size, color, a=1.0, scale=1.0, stroke=0, stroke_col=(0, 0, 0), shadow=True, bold=True):
@@ -208,16 +197,16 @@ def arrow(img, x0, y0, x1, y1, col=WHITE, w=14, p=1.0):
 def hook(t):
     img = background(t)
     a, s = appear(t, 0.1)
-    txt(img, EP["hook1"], W / 2, 400, 100, WHITE, a, s)
+    txt(img, EP["hook1"], W / 2, 400, fit(EP["hook1"], 100), WHITE, a, s)
     a, s = appear(t, 0.3, 0.5)
     paste_c(img, FMA, 770 + (1 - a) * 500, 900)
     a2, _ = appear(t, 0.55, 0.5)
     paste_c(img, FIT, 310 - (1 - a2) * 500, 900)
     arrow(img, 600, 900, 480, 900, YELLOW, 16, ease((t - 0.9) / 0.3))
     a, s = appear(t, 1.1)
-    txt(img, EP["hook2"], W / 2, 1320, 104, YELLOW, a, s, stroke=0)
+    txt(img, EP["hook2"], W / 2, 1320, fit(EP["hook2"], 104), YELLOW, a, s, stroke=0)
     a, s = appear(t, 2.3)
-    txt(img, EP["count_txt"], W / 2, 1600, 72, WHITE, a, s, bold=False)
+    txt(img, EP["count_txt"], W / 2, 1600, fit(EP["count_txt"], 72, bold=False), WHITE, a, s, bold=False)
     return img
 
 
@@ -232,7 +221,7 @@ CY0 = 400
 
 def word_card(i, tl):
     img = background(HOOK + i * CARD + tl)
-    dar, it, pr = EP["words"][i]
+    top, bot, pill_txt, sub = EP["words"][i]
     xo = (1 - ease(tl / 0.35)) * W
     if tl > CARD - 0.32:
         xo -= ease((tl - (CARD - 0.32)) / 0.32) * W
@@ -245,7 +234,10 @@ def word_card(i, tl):
     a, s = appear(tl, 0.2)
     txt(img, EP["label_top"], cx, CY0 + 120, 50, (120, 118, 125), a, 1, shadow=False, bold=False)
     a, s = appear(tl, 0.3)
-    txt(img, dar, cx, CY0 + 290, 150, DARK, a, s, shadow=False)
+    txt(img, top, cx, CY0 + 280, fit(top, 150, CW - 140), DARK, a, s, shadow=False)
+    if sub:
+        a, s = appear(tl, 0.5)
+        txt(img, sub, cx, CY0 + 410, fit(sub, 46, CW - 140, False), (120, 118, 125), a, 1, shadow=False, bold=False)
     # arrow down
     p = ease((tl - 0.8) / 0.3)
     if p > 0:
@@ -253,19 +245,18 @@ def word_card(i, tl):
         arrow(img, cx, CY0 + 455, cx, CY0 + 460 + 120 * p + bob, ORANGE, 14, 1)
     a, s = appear(tl, 1.0)
     txt(img, EP["label_it"], cx, CY0 + 640, 50, (120, 118, 125), a, 1, shadow=False, bold=False)
-    size = 150
-    while measure(it, size) > CW - 140:
-        size -= 6
+    size = fit(bot, 150 if "\n" not in bot else 88, CW - 140)
     a, s = appear(tl, 1.15, 0.4)
-    txt(img, it, cx, CY0 + 790, size, GREEN if i % 2 == 0 else RED, a, s, shadow=False)
+    txt(img, bot, cx, CY0 + (800 if "\n" not in bot else 790), size, GREEN if i % 2 == 0 else RED, a, s, shadow=False)
     a, s = appear(tl, 1.55)
     if a > 0.01:
-        lab = f"{EP['label_pr']}: {pr}"
-        tw = measure(lab, 62) + 70
+        lab = f"{EP['label_pr']}: {pill_txt}" if EP.get("label_pr") else pill_txt
+        ps = fit(lab, 62, CW - 160)
+        tw = measure(lab, ps) + 70
         pill = Image.new("RGBA", (int(tw), 110), (0, 0, 0, 0))
         ImageDraw.Draw(pill).rounded_rectangle((0, 0, tw - 1, 109), 55, fill=ORANGE + (int(255 * a),))
-        paste_c(img, pill, cx, CY0 + 990, s)
-        txt(img, lab, cx, CY0 + 982, 62, WHITE, a, s, shadow=False)
+        paste_c(img, pill, cx, CY0 + 1035, s)
+        txt(img, lab, cx, CY0 + 1027, ps, WHITE, a, s, shadow=False)
     # progress
     seg, gap = 90, 14
     tot = N * seg + (N - 1) * gap
@@ -282,9 +273,9 @@ def outro(tl):
     img = background(OUT0 + tl)
     fade = 1 - ease((tl - 3.3) / 0.3) if tl > 3.3 else 1
     a, s = appear(tl, 0.2)
-    txt(img, EP["out1"], W / 2, 640, 104, WHITE, a * fade, s)
+    txt(img, EP["out1"], W / 2, 640, fit(EP["out1"], 104), WHITE, a * fade, s)
     a, s = appear(tl, 0.8)
-    txt(img, EP["out2"], W / 2, 920, 86, YELLOW, a * fade, s)
+    txt(img, EP["out2"], W / 2, 920, fit(EP["out2"], 86), YELLOW, a * fade, s)
     p = ease((tl - 1.1) / 0.3) * fade
     if p > 0.01:
         bob = 20 * abs(math.sin(tl * 4))
@@ -300,19 +291,33 @@ def outro(tl):
     return img
 
 
-def frame(t):
+LOGO = None
+_lp = os.path.join(HERE, "logo", "ciao_khoya_watermark.png")
+if os.path.exists(_lp) and not os.environ.get("REEL_NO_LOGO"):
+    LOGO = Image.open(_lp).convert("RGBA")
+    LOGO = LOGO.resize((170, int(LOGO.height * 170 / LOGO.width)), Image.LANCZOS)
+    LOGO.putalpha(Image.fromarray((np.asarray(LOGO.getchannel("A"), np.float32) * 0.9).astype(np.uint8)))
+
+
+def frame_raw(t):
     if t < HOOK:
-        img = hook(t)
-        return img
+        return hook(t)
     if t < OUT0:
         i = int((t - HOOK) // CARD)
         return word_card(i, t - HOOK - i * CARD)
     return outro(t - OUT0)
 
 
+def frame(t):
+    img = frame_raw(t)
+    if LOGO is not None:
+        img.alpha_composite(LOGO, (W - LOGO.width - 40, 50))
+    return img
+
+
 if "--preview" in sys.argv:
     od = sys.argv[1]; os.makedirs(od, exist_ok=True)
-    ts = [0.6, 2.9, 4.2, 5.0, 6.5, 7.4, 9.3, 15, 27, 31.5, 34.5, 38.5]
+    ts = [2.9] + [HOOK + k * CARD + 2.5 for k in range(N)] + [OUT0 + 2.0, OUT0 + 6.0]
     sheet = Image.new("RGB", (360 * 6, 640 * 2))
     for k, tt in enumerate(ts):
         sheet.paste(frame(tt).convert("RGB").resize((360, 640)), ((k % 6) * 360, (k // 6) * 640))
@@ -445,11 +450,12 @@ def add_vo(sig, at):
     i0 = int(at * sr); e_ = min(n, i0 + len(sig)); vo[i0:e_] += sig[:e_ - i0]
 
 
-USE_VO = os.environ.get("REEL_NO_VO") is None
+USE_VO = os.environ.get("REEL_VO") is not None
 WORDS_ONLY = os.environ.get("REEL_WORDS_ONLY") is not None
 if USE_VO and not WORDS_ONLY:
   add_vo(tts_fit(EP["vo_intro"], HOOK - 0.5), 0.3)
-for i, (_, it, _) in enumerate(EP["words"] if USE_VO else []):
+for i, w_ in enumerate(EP["words"] if USE_VO else []):
+    it = w_[EP.get("it_index", 1)].replace("\n", " ")
     t0 = HOOK + i * CARD
     add_vo(tts(it.lower(), 105), t0 + 1.2)
     add_vo(tts(it.lower(), 90), t0 + 2.35)
@@ -468,7 +474,7 @@ subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", TMPV, "-i", TMPA, "-
                 "160k", "-shortest", "-movflags", "+faststart", OUT], check=True)
 write(TMPA, sfx * 0.7 + vo)
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", TMPV, "-i", TMPA, "-c:v", "copy", "-c:a", "aac", "-b:a",
-                "160k", "-shortest", "-movflags", "+faststart", OUT.replace(".mp4", "_voice_no_music.mp4")],
+                "160k", "-shortest", "-movflags", "+faststart", OUT.replace(".mp4", "_no_music.mp4")],
                check=True)
 os.remove(TMPV); os.remove(TMPA)
 print("done", DUR, "s")
