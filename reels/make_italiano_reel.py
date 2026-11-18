@@ -438,13 +438,16 @@ def add_vo(sig, at):
     i0 = int(at * sr); e_ = min(n, i0 + len(sig)); vo[i0:e_] += sig[:e_ - i0]
 
 
-add_vo(tts_fit(EP["vo_intro"], HOOK - 0.5), 0.3)
-for i, (_, it, _) in enumerate(EP["words"]):
+USE_VO = os.environ.get("REEL_NO_VO") is None
+if USE_VO:
+  add_vo(tts_fit(EP["vo_intro"], HOOK - 0.5), 0.3)
+for i, (_, it, _) in enumerate(EP["words"] if USE_VO else []):
     t0 = HOOK + i * CARD
     add_vo(tts(it.lower(), 120), t0 + 1.15)
     add_vo(tts(it.lower(), 100), t0 + 2.3)
-add_vo(tts_fit(EP["vo_out1"], 3.2), OUT0 + 0.2)
-add_vo(tts_fit(EP["vo_follow"], 3.0), OUT0 + 3.7)
+if USE_VO:
+  add_vo(tts_fit(EP["vo_out1"], 3.2), OUT0 + 0.2)
+  add_vo(tts_fit(EP["vo_follow"], 3.0), OUT0 + 3.7)
 
 # duck the music while the voice speaks
 act = (np.abs(vo) > 0.02).astype(np.float64)
