@@ -234,7 +234,7 @@ def word_card(i, tl):
     a, s = appear(tl, 0.2)
     txt(img, EP["label_top"], cx, CY0 + 120, 50, (120, 118, 125), a, 1, shadow=False, bold=False)
     a, s = appear(tl, 0.3)
-    txt(img, top, cx, CY0 + 280, fit(top, 150, CW - 140), DARK, a, s, shadow=False)
+    txt(img, top, cx, CY0 + 280, fit(top, 150 if "\n" not in top else 96, CW - 140), DARK, a, s, shadow=False)
     if sub:
         a, s = appear(tl, 0.5)
         txt(img, sub, cx, CY0 + 410, fit(sub, 46, CW - 140, False), (120, 118, 125), a, 1, shadow=False, bold=False)
@@ -258,7 +258,8 @@ def word_card(i, tl):
         paste_c(img, pill, cx, CY0 + 1035, s)
         txt(img, lab, cx, CY0 + 1027, ps, WHITE, a, s, shadow=False)
     # progress
-    seg, gap = 90, 14
+    gap = 14
+    seg = min(90, (W - 160 - (N - 1) * gap) / N)
     tot = N * seg + (N - 1) * gap
     x = W / 2 - tot / 2
     for k in range(N):
@@ -318,9 +319,10 @@ def frame(t):
 if "--preview" in sys.argv:
     od = sys.argv[1]; os.makedirs(od, exist_ok=True)
     ts = [2.9] + [HOOK + k * CARD + 2.5 for k in range(N)] + [OUT0 + 2.0, OUT0 + 6.0]
-    sheet = Image.new("RGB", (360 * 6, 640 * 2))
+    cols = 8
+    sheet = Image.new("RGB", (360 * cols, 640 * ((len(ts) + cols - 1) // cols)))
     for k, tt in enumerate(ts):
-        sheet.paste(frame(tt).convert("RGB").resize((360, 640)), ((k % 6) * 360, (k // 6) * 640))
+        sheet.paste(frame(tt).convert("RGB").resize((360, 640)), ((k % cols) * 360, (k // cols) * 640))
     sheet.save(os.path.join(od, "sheet.png"))
     sys.exit()
 
