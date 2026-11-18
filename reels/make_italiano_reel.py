@@ -400,11 +400,64 @@ def write(path, sig):
         wf.setnchannels(2); wf.setsampwidth(2); wf.setframerate(sr); wf.writeframes(pcm.tobytes())
 
 
-write(TMPA, mus * 0.7 + sfx)
+# ------------------------------------------------------------- Italian voice-over (espeak-ng + MBROLA it4)
+VOICE = os.environ.get("REEL_VOICE", "mb-it4")
+EP.setdefault("vo_intro", "Sei marocchino in Italia? Allora parli già italiano!")
+EP.setdefault("vo_out1", "Quale parola non conoscevi? Scrivilo nei commenti!")
+EP.setdefault("vo_follow", "Seguimi per imparare l'italiano!")
+
+
+def tts(text, speed=130):
+    tmp = TMPA + ".tts.wav"
+    subprocess.run(["espeak-ng", "-v", VOICE, "-s", str(speed), "-w", tmp, text], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    with wave.open(tmp) as wf:
+        a = np.frombuffer(wf.readframes(wf.getnframes()), np.int16).astype(np.float64) / 32768
+        if wf.getnchannels() == 2:
+            a = a.reshape(-1, 2).mean(1)
+        rate = wf.getframerate()
+    os.remove(tmp)
+    a = np.interp(np.arange(int(len(a) * sr / rate)) / sr, np.arange(len(a)) / rate, a)
+    nz = np.nonzero(np.abs(a) > 0.01)[0]
+    if len(nz):
+        a = a[max(0, nz[0] - 200):nz[-1] + 2000]
+    return a / (np.abs(a).max() + 1e-9) * 0.9
+
+
+def tts_fit(text, max_len, speed=135):
+    a = tts(text, speed)
+    while len(a) / sr > max_len and speed < 220:
+        speed += 10; a = tts(text, speed)
+    return a
+
+
+vo = np.zeros(n)
+
+
+def add_vo(sig, at):
+    i0 = int(at * sr); e_ = min(n, i0 + len(sig)); vo[i0:e_] += sig[:e_ - i0]
+
+
+add_vo(tts_fit(EP["vo_intro"], HOOK - 0.5), 0.3)
+for i, (_, it, _) in enumerate(EP["words"]):
+    t0 = HOOK + i * CARD
+    add_vo(tts(it.lower(), 120), t0 + 1.15)
+    add_vo(tts(it.lower(), 100), t0 + 2.3)
+add_vo(tts_fit(EP["vo_out1"], 3.2), OUT0 + 0.2)
+add_vo(tts_fit(EP["vo_follow"], 3.0), OUT0 + 3.7)
+
+# duck the music while the voice speaks
+act = (np.abs(vo) > 0.02).astype(np.float64)
+k = int(0.25 * sr); cs = np.cumsum(np.concatenate([[0], act]))
+act = np.clip((cs[np.minimum(np.arange(n) + k, n)] - cs[np.maximum(np.arange(n) - k, 0)]) / (2 * k) * 4, 0, 1)
+duck = 1 - 0.6 * act
+
+write(TMPA, mus * 0.6 * duck + sfx * 0.7 + vo)
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", TMPV, "-i", TMPA, "-c:v", "copy", "-c:a", "aac", "-b:a",
                 "160k", "-shortest", "-movflags", "+faststart", OUT], check=True)
-write(TMPA, sfx)
+write(TMPA, sfx * 0.7 + vo)
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", TMPV, "-i", TMPA, "-c:v", "copy", "-c:a", "aac", "-b:a",
-                "160k", "-shortest", "-movflags", "+faststart", OUT.replace(".mp4", "_sfx_only.mp4")], check=True)
+                "160k", "-shortest", "-movflags", "+faststart", OUT.replace(".mp4", "_voice_no_music.mp4")],
+               check=True)
 os.remove(TMPV); os.remove(TMPA)
 print("done", DUR, "s")
